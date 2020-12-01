@@ -1,0 +1,31 @@
+# Gradle directories
+.gradle
+
+# Build directories
+build
+bin
+
+# Eclipse metadata
+.project
+.classpath
+.settings
+
+# IDEA metadata
+.idea
+*.iws
+*.iml
+*.ipr
+
+# Annotation processor
+.apt_generated
+.factorypath
+
+# Generated sources
+**/gen/main/cpp
+**/gen/main/java
+**/gen/main/swift
+
+# MacOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
