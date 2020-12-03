@@ -15,7 +15,7 @@ jobs:
     - name: Clone repository
       uses: actions/checkout@v2
       with:
-        repository: https://github.com/sandpolis/sandpolis
+        repository: sandpolis/sandpolis
         submodules: recursive
     - name: Run tests
       run: |
@@ -30,7 +30,7 @@ jobs:
     - name: Clone repository
       uses: actions/checkout@v2
       with:
-        repository: https://github.com/sandpolis/sandpolis
+        repository: sandpolis/sandpolis
         submodules: recursive
     - name: Push
       uses: docker/build-push-action@v1
