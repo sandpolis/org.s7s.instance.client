@@ -1,0 +1,41 @@
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    name: "Test on ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+    steps:
+    - name: Clone repository
+        uses: actions/checkout@v2
+        with:
+          repository: https://github.com/sandpolis/sandpolis
+          submodules: recursive
+    - name: Run tests
+      run: |
+        ./gradlew :com.sandpolis.client.lifegem:test
+
+  push:
+    name: Push image to Docker Hub
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+        with:
+          repository: https://github.com/sandpolis/sandpolis
+          submodules: recursive
+      - name: Push
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: sandpolis/desktop-client
+          tag_with_ref: true
