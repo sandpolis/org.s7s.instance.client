@@ -15,10 +15,11 @@ import com.bmuschko.gradle.docker.tasks.image.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("eclipse")
 	id("java-library")
-
-	id("com.sandpolis.gradle.soi")
+	id("sandpolis-java")
+	id("sandpolis-module")
+	id("sandpolis-publish")
+	id("sandpolis-soi")
 	id("com.sandpolis.gradle.codegen")
 	id("org.openjfx.javafxplugin") version "0.0.9"
 	id("com.bmuschko.docker-remote-api") version "6.6.0"
@@ -40,13 +41,6 @@ tasks.withType<KotlinCompile>().configureEach {
 javafx {
 	modules = listOf( "javafx.controls", "javafx.fxml", "javafx.graphics" )
 	version = "15"
-}
-
-eclipse {
-	project {
-		name = project.name
-		comment = project.name
-	}
 }
 
 sourceSets {
