@@ -16,11 +16,13 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 15
-    - name: Clone repository
+    - name: Clone root repository
       uses: actions/checkout@v2
       with:
         repository: sandpolis/sandpolis
-        submodules: recursive
+    - name: Checkout submodules
+      run: |
+        git submodule update --remote --merge com.sandpolis.client.lifegem
     - name: Run tests
       run: |
         ./gradlew :com.sandpolis.client.lifegem:test
@@ -35,11 +37,13 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 15
-    - name: Clone repository
+    - name: Clone root repository
       uses: actions/checkout@v2
       with:
         repository: sandpolis/sandpolis
-        submodules: recursive
+    - name: Checkout submodules
+      run: |
+        git submodule update --remote --merge com.sandpolis.client.lifegem
     - name: Push
       uses: docker/build-push-action@v1
       with:
