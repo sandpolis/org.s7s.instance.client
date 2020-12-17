@@ -22,7 +22,7 @@ jobs:
         repository: sandpolis/sandpolis
     - name: Checkout submodules
       run: |
-        git submodule update --remote --merge com.sandpolis.client.lifegem
+        git submodule update --init --remote --merge com.sandpolis.client.lifegem
     - name: Run tests
       run: |
         ./gradlew :com.sandpolis.client.lifegem:test
@@ -43,7 +43,7 @@ jobs:
         repository: sandpolis/sandpolis
     - name: Checkout submodules
       run: |
-        git submodule update --remote --merge com.sandpolis.client.lifegem
+        git submodule update --init --remote --merge com.sandpolis.client.lifegem
     - name: Push
       uses: docker/build-push-action@v1
       with:
