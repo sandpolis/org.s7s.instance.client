@@ -5,8 +5,8 @@ on:
     branches: [ master ]
 
 jobs:
-  test:
-    name: "Test on ${{ matrix.os }}"
+  build:
+    name: "Build on ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -23,6 +23,6 @@ jobs:
     - name: Checkout submodules
       run: |
         git submodule update --init --remote --merge com.sandpolis.client.lifegem
-    - name: Execute tests
+    - name: Execute build
       run: |
-        ./gradlew :com.sandpolis.client.lifegem:test
+        gradle --no-daemon :com.sandpolis.client.lifegem:build
