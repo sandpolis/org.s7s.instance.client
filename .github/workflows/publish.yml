@@ -7,8 +7,11 @@ jobs:
   publish:
     name: Publish release
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
     steps:
+    - name: Extract version from tag
+      id: get_version
+      run: |
+        echo "::set-output name=version::${GITHUB_REF#refs/tags/v}"
     - name: Initialize Java
       uses: actions/setup-java@v1
       with:
@@ -36,12 +39,12 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: com.sandpolis.client.lifegem
-        file: Dockerfile
+        file: com.sandpolis.client.lifegem/Dockerfile
         platforms: linux/amd64,linux/arm/v7,linux/arm64/v8
         push: true
-        tags:
-        - sandpolis/desktop-client:latest
-        - sandpolis/desktop-client:${GITHUB_REF#refs/tags/v}
+        tags: |
+          sandpolis/desktop-client:latest
+          sandpolis/desktop-client:${{ steps.get_version.outputs.version }}
     - name: Maven publish
       run: |
         gradle --no-daemon :com.sandpolis.client.lifegem:publish
