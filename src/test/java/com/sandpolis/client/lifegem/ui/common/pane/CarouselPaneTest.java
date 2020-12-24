@@ -9,13 +9,12 @@
 //    https://mozilla.org/MPL/2.0                                             //
 //                                                                            //
 //=========================================================S A N D P O L I S==//
-package com.sandpolis.client.lifegem.common.pane;
+package com.sandpolis.client.lifegem.ui.common.pane;
 
-import static com.sandpolis.core.instance.store.pref.PrefStore.PrefStore;
+import static com.sandpolis.core.instance.pref.PrefStore.PrefStore;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.testfx.assertions.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -26,8 +25,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-
-import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -65,22 +62,12 @@ class CarouselPaneTest {
 		view3 = new Label("3");
 		view3.setId("view3");
 
-		carousel = new CarouselPane("left", 100, view1, view2, view3);
+		carousel = new CarouselPane(view1);
+		carousel.add(view2);
+		carousel.add(view3);
 
 		stage.setScene(new Scene(carousel, 100, 100));
 		stage.show();
-	}
-
-	@Test
-	@DisplayName("Try to construct a CarouselPane with an invalid direction")
-	void carouselPane_1() {
-		assertThrows(IllegalArgumentException.class, () -> new CarouselPane("invalid", 100, new Label()));
-	}
-
-	@Test
-	@DisplayName("Try to construct a CarouselPane with an invalid duration")
-	void carouselPane_2() {
-		assertThrows(IllegalArgumentException.class, () -> new CarouselPane("right", -1, new Label()));
 	}
 
 	@Test

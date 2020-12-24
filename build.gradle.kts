@@ -23,7 +23,7 @@ plugins {
 	id("com.sandpolis.gradle.codegen")
 	id("org.openjfx.javafxplugin") version "0.0.9"
 	id("com.bmuschko.docker-remote-api") version "6.6.0"
-	kotlin("jvm") version "1.4.10"
+	kotlin("jvm") version "1.4.21"
 }
 
 repositories {
@@ -34,7 +34,7 @@ repositories {
 
 tasks.withType<KotlinCompile>().configureEach {
 	kotlinOptions {
-		jvmTarget = "1.8"
+		jvmTarget = "15"
 	}
 }
 

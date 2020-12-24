@@ -112,10 +112,7 @@ public class CarouselPane extends StackPane {
 	/**
 	 * Create a new {@code CarouselPane} from the given components.
 	 *
-	 * @param direction The direction that should be considered "forward" in the
-	 *                  transitions
-	 * @param duration  The transition time in milliseconds
-	 * @param children  Nodes in the carousel
+	 * @param first First node in the carousel
 	 */
 	public CarouselPane(Node first) {
 		views.add(first);
