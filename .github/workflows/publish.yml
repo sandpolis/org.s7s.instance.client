@@ -24,6 +24,9 @@ jobs:
       uses: docker/setup-qemu-action@v1
     - name: Initialize buildx
       uses: docker/setup-buildx-action@v1
+    - name: Prepare Docker build
+      run: |
+        gradle --no-daemon :com.sandpolis.client.lifegem:imageSyncBuildContext
     - name: DockerHub login
       uses: docker/login-action@v1
       with:
@@ -32,14 +35,16 @@ jobs:
     - name: DockerHub publish
       uses: docker/build-push-action@v2
       with:
-        context: .
-        file: com.sandpolis.client.lifegem/Dockerfile
+        context: com.sandpolis.client.lifegem
+        file: Dockerfile
         platforms: linux/amd64,linux/arm/v7,linux/arm64/v8
         push: true
-        tags: sandpolis/desktop-client:latest
+        tags:
+        - sandpolis/desktop-client:latest
+        - sandpolis/desktop-client:${GITHUB_REF#refs/tags/v}
     - name: Maven publish
       run: |
-        gradle --no-daemon publish
+        gradle --no-daemon :com.sandpolis.client.lifegem:publish
       env:
         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
