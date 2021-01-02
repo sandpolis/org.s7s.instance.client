@@ -75,19 +75,16 @@ public class AboutController extends AbstractController {
 	private void initialize() throws IOException {
 
 		// Set Sandpolis version
-		if (!Core.SO_BUILD.getVersion().isEmpty())
-			version.setText(Core.SO_BUILD.getVersion());
-		else
-			version.setText("?.?.?");
+		version.setText(Core.SO_BUILD.getProperty("instance.version", "?.?.?"));
 
 		// Set build timestamp
-		build_time.setText(new Date(Core.SO_BUILD.getTime()).toString());
+		build_time.setText(new Date(Long.parseLong(Core.SO_BUILD.getProperty("build.timestamp"))).toString());
 
 		// Set build platform name
-		build_platform.setText(Core.SO_BUILD.getPlatform());
+		build_platform.setText(Core.SO_BUILD.getProperty("build.platform"));
 
 		// Set build Java version
-		build_version.setText(Core.SO_BUILD.getJavaVersion());
+		build_version.setText(Core.SO_BUILD.getProperty("build.java.version"));
 
 		// Set current Java version
 		java_version.setText(
