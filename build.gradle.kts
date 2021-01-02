@@ -77,21 +77,21 @@ codegen {
 	javaFxStateTree = true
 }
 
-val imageSyncBuildContext by tasks.creating(Sync::class) {
+task<Sync>("assembleLib") {
 	dependsOn(tasks.named("jar"))
 	from(configurations.runtimeClasspath)
 	from(tasks.named("jar"))
-	into("${buildDir}/docker/lib")
+	into("${buildDir}/lib")
 }
 
-val imageBuild by tasks.creating(DockerBuildImage::class) {
-	dependsOn(imageSyncBuildContext)
+task<DockerBuildImage>("buildImage") {
+	dependsOn(tasks.named("assembleLib"))
 	inputDir.set(file("."))
 	images.add("sandpolis/client/lifegem:${project.version}")
 	images.add("sandpolis/client/lifegem:latest")
 }
 
-task<Exec>("imageTest") {
-	dependsOn(imageBuild)
+task<Exec>("runImage") {
+	dependsOn(tasks.named("buildImage"))
 	commandLine("docker", "run", "-v", "/tmp/.X11-unix/:/tmp/.X11-unix/", "-e", "DISPLAY", "--net", "host", "--rm", "sandpolis/client/lifegem:latest")
 }

@@ -21,4 +21,4 @@ ENV SANDPOLIS_PLUGINS_ENABLED       "true"
 #ENV JAVA_TOOL_OPTIONS "-agentlib:jdwp=transport=dt_socket,address=0.0.0.0:7000,server=y,suspend=y"
 
 # Install application
-COPY build/docker/lib /app/lib
+COPY build/lib /app/lib
