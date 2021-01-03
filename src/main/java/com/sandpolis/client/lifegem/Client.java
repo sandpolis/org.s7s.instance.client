@@ -76,9 +76,15 @@ public final class Client {
 		// TODO move
 		Config.MESSAGE_TIMEOUT.register(1000);
 
-		Environment.LIB.set(Config.PATH_LIB.value().orElse(null)).requireReadable();
-		Environment.LOG.set(Config.PATH_LOG.value().orElse(null)).requireWritable();
-		Environment.PLUGIN.set(Config.PATH_PLUGIN.value().orElse(null)).requireWritable();
+		Config.PATH_CFG.register();
+		Config.PATH_LOG.register();
+		Config.PATH_LIB.register();
+		Config.PATH_PLUGIN.register();
+
+		Environment.CFG.requireReadable();
+		Environment.LIB.requireReadable();
+		Environment.LOG.requireWritable();
+		Environment.PLUGIN.requireWritable();
 		return outcome.success();
 	});
 
