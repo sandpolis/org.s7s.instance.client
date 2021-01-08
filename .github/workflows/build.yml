@@ -25,4 +25,4 @@ jobs:
         git submodule update --init --remote --merge com.sandpolis.client.lifegem
     - name: Execute build
       run: |
-        gradle --no-daemon :com.sandpolis.client.lifegem:build
+        gradle --no-daemon :com.sandpolis.client.lifegem:build -x javadoc
