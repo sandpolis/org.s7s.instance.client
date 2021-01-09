@@ -11,17 +11,20 @@
 package com.sandpolis.client.lifegem.ui.main
 
 import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
-import com.sandpolis.client.lifegem.state.FxProfile
-import javafx.collections.ObservableList
+import com.sandpolis.core.instance.state.st.STDocument
+import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.collections.FXCollections
+import javafx.collections.ObservableList
 import tornadofx.*
 
 class MainView : View("Main") {
 
-    val profiles: ObservableList<FxProfile> = FXCollections.observableArrayList()
+    val profiles: ObservableList<STDocument> = FXCollections.observableArrayList()
 
     val hostList = tableview(profiles) {
-        readonlyColumn("UUID", FxProfile::uuidProperty)
+        column<STDocument, String>("") {
+            ReadOnlyObjectWrapper("")
+        }
     }
 
     override val root = borderpane {

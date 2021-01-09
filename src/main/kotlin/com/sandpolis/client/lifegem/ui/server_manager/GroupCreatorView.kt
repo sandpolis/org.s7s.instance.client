@@ -10,11 +10,11 @@
 
 package com.sandpolis.client.lifegem.ui.server_manager
 
-import tornadofx.*
 import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleStringProperty
 import javafx.beans.property.SimpleIntegerProperty
+import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Orientation
+import tornadofx.*
 
 class GroupCreatorView : View() {
 
@@ -32,10 +32,10 @@ class GroupCreatorView : View() {
 
     override val root = borderpane {
         center = scrollpane {
-            setFitToWidth(true)
+            isFitToWidth = true
             squeezebox {
                 fold("Metadata", expanded = true) {
-                    setCollapsible(false)
+                    isCollapsible = false
                     form {
                         fieldset {
                             field("Group Name") {

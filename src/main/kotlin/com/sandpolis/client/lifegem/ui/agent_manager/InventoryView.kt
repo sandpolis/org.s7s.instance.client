@@ -10,14 +10,6 @@
 
 package com.sandpolis.client.lifegem.ui.agent_manager
 
-import com.sandpolis.client.lifegem.ui.common.pane.ExtendPane
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleStringProperty
-import javafx.collections.FXCollections
-import javafx.geometry.Orientation
-import javafx.geometry.Side
-import javafx.scene.control.TabPane
-import javafx.scene.layout.Region
 import tornadofx.*
 
 class InventoryView : View() {

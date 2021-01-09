@@ -11,12 +11,6 @@
 package com.sandpolis.client.lifegem.ui.about
 
 import com.sandpolis.client.lifegem.Client.UI
-import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
-import com.sandpolis.core.foundation.util.ValidationUtil
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleStringProperty
-import javafx.collections.FXCollections
-import javafx.geometry.Orientation
 import tornadofx.*
 
 class AboutView : View("About") {

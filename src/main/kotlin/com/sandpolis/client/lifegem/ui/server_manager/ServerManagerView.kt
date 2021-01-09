@@ -10,27 +10,19 @@
 
 package com.sandpolis.client.lifegem.ui.server_manager
 
-import com.sandpolis.client.lifegem.ui.common.pane.ExtendPane
-import com.sandpolis.client.lifegem.state.FxGroup
-import com.sandpolis.client.lifegem.state.FxListener
-import com.sandpolis.client.lifegem.state.FxUser
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleStringProperty
-import javafx.collections.ObservableList
+import com.sandpolis.core.instance.state.st.STDocument
+import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.collections.FXCollections
-import javafx.geometry.Orientation
-import javafx.geometry.Side
-import javafx.scene.control.TabPane
-import javafx.scene.layout.Region
+import javafx.collections.ObservableList
 import tornadofx.*
 
 class ServerManagerView : View("Server Manager") {
 
     val controller: ServerManagerController by inject()
 
-    val users: ObservableList<FxUser> = FXCollections.observableArrayList()
-    val listeners: ObservableList<FxListener> = FXCollections.observableArrayList()
-    val groups: ObservableList<FxGroup> = FXCollections.observableArrayList()
+    val users: ObservableList<STDocument> = FXCollections.observableArrayList()
+    val listeners: ObservableList<STDocument> = FXCollections.observableArrayList()
+    val groups: ObservableList<STDocument> = FXCollections.observableArrayList()
 
     override  val root = drawer {
         item("Servers") {}
@@ -44,7 +36,9 @@ class ServerManagerView : View("Server Manager") {
                     }
                 center =
                     tableview(listeners) {
-                        readonlyColumn("Name", FxListener::nameProperty)
+                        column<STDocument, String>("Name") {
+                            ReadOnlyObjectWrapper("")
+                        }
                     }
             }
         }
@@ -58,10 +52,18 @@ class ServerManagerView : View("Server Manager") {
                     }
                 center =
                     tableview(users) {
-                        readonlyColumn("Username", FxUser::usernameProperty)
-                        //readonlyColumn("Password age", FxUser::name)
-                        //readonlyColumn("Last login", FxUser::name)
-                        //readonlyColumn("Login address", FxUser::name)
+                        column<STDocument, String>("Username") {
+                            ReadOnlyObjectWrapper("")
+                        }
+                        column<STDocument, String>("Password age") {
+                            ReadOnlyObjectWrapper("")
+                        }
+                        column<STDocument, String>("Last login") {
+                            ReadOnlyObjectWrapper("")
+                        }
+                        column<STDocument, String>("Login address") {
+                            ReadOnlyObjectWrapper("")
+                        }
                     }
             }
         }
@@ -75,7 +77,9 @@ class ServerManagerView : View("Server Manager") {
                     }
                 center =
                     tableview(groups) {
-                        readonlyColumn("Name", FxGroup::nameProperty)
+                        column<STDocument, String>("Name") {
+                            ReadOnlyObjectWrapper("")
+                        }
                         //readonlyColumn("", FxGroup::name) {
                         //    cellFormat { graphic = button("1") }
                         //}

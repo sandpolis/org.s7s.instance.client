@@ -10,23 +10,13 @@
 
 package com.sandpolis.client.lifegem.ui.server_manager
 
-import com.sandpolis.client.lifegem.ui.common.pane.ExtendPane
-import com.sandpolis.client.lifegem.state.FxGroup
-import com.sandpolis.client.lifegem.state.FxListener
-import com.sandpolis.client.lifegem.state.FxUser
-import javafx.beans.property.SimpleBooleanProperty
+import com.sandpolis.core.instance.state.st.STDocument
 import javafx.beans.property.SimpleStringProperty
-import javafx.collections.ObservableList
-import javafx.collections.FXCollections
-import javafx.geometry.Orientation
-import javafx.geometry.Side
-import javafx.scene.control.TabPane
-import javafx.scene.layout.Region
 import tornadofx.*
 
 class GenerateArtifactFragment : Fragment() {
 
-    val group: FxGroup by param()
+    val group: STDocument by param()
 
     private val model = object : ViewModel() {
         val artifactType = bind { SimpleStringProperty() }

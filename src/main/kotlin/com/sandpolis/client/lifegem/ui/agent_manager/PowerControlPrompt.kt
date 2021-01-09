@@ -10,23 +10,14 @@
 
 package com.sandpolis.client.lifegem.ui.agent_manager
 
-import com.sandpolis.client.lifegem.ui.common.pane.ExtendPane
-import com.sandpolis.client.lifegem.state.FxProfile
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleStringProperty
-import javafx.collections.FXCollections
-import javafx.geometry.Orientation
-import javafx.geometry.Side
-import javafx.scene.control.TabPane
-import javafx.scene.layout.Region
-import javafx.scene.paint.Color
-import javafx.beans.property.SimpleObjectProperty
-import javafx.geometry.Pos
-import tornadofx.*
+import com.sandpolis.core.instance.state.st.STDocument
+import tornadofx.Fragment
+import tornadofx.button
+import tornadofx.titledpane
 
 class PowerControlPrompt : Fragment() {
 
-    val profile: FxProfile by param()
+    val profile: STDocument by param()
 
     override val root = titledpane("Run power operation") {
         collapsibleProperty().set(false)

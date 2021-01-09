@@ -10,14 +10,7 @@
 
 package com.sandpolis.client.lifegem.ui.login
 
-import com.sandpolis.core.net.connection.ConnectionStore.ConnectionStore
-import com.sandpolis.core.client.cmd.LoginCmd
-import com.sandpolis.core.client.cmd.ServerCmd
-import javafx.beans.property.BooleanProperty
-import javafx.beans.property.StringProperty
-import com.sandpolis.core.net.connection.ConnectionFuture
-
-import tornadofx.*
+import tornadofx.Controller
 
 class LoginController : Controller() {
 }

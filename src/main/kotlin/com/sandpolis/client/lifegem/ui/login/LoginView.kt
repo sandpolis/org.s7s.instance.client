@@ -10,35 +10,28 @@
 
 package com.sandpolis.client.lifegem.ui.login
 
-import com.sandpolis.client.lifegem.state.FxPlugin
-import com.sandpolis.core.net.connection.ConnectionStore.ConnectionStore
 import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
 import com.sandpolis.client.lifegem.ui.main.MainView
-import com.sandpolis.core.foundation.util.ValidationUtil
 import com.sandpolis.core.client.cmd.LoginCmd
 import com.sandpolis.core.client.cmd.ServerCmd
+import com.sandpolis.core.foundation.util.ValidationUtil
+import com.sandpolis.core.instance.state.st.STDocument
 import com.sandpolis.core.net.connection.Connection
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleDoubleProperty
-import javafx.beans.property.SimpleLongProperty
-import javafx.beans.property.SimpleObjectProperty
-import javafx.beans.property.SimpleStringProperty
-import javafx.collections.FXCollections
-import javafx.geometry.Orientation
-import javafx.scene.image.Image
-import javafx.animation.Timeline
+import com.sandpolis.core.net.connection.ConnectionStore.ConnectionStore
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
-import javafx.util.Duration
+import javafx.animation.Timeline
+import javafx.beans.property.*
+import javafx.collections.FXCollections
+import javafx.collections.ObservableList
+import javafx.geometry.Orientation
+import javafx.scene.image.Image
 import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
-import javafx.collections.ObservableList
-import java.util.Timer
+import javafx.util.Duration
 import tornadofx.*
+import java.util.*
 import kotlin.concurrent.timer
-import com.sandpolis.core.instance.state.oid.InstanceOid
-import com.sandpolis.core.net.state.STCmd
-import java.util.Objects
 
 class LoginView : View("Login") {
 
@@ -341,12 +334,16 @@ class LoginView : View("Login") {
             }
         }
 
-    val plugins: ObservableList<FxPlugin> = FXCollections.observableArrayList()
+    val plugins: ObservableList<STDocument> = FXCollections.observableArrayList()
 
     val pluginSelection = borderpane {
         center = tableview(plugins) {
-            readonlyColumn("Name", FxPlugin::nameProperty)
-            readonlyColumn("Identifier", FxPlugin::packageIdProperty)
+            column<STDocument, String>("Name") {
+                ReadOnlyObjectWrapper("")
+            }
+            column<STDocument, String>("Identifier") {
+                ReadOnlyObjectWrapper("")
+            }
         }
     }
 

@@ -10,6 +10,6 @@
 
 package com.sandpolis.client.lifegem.ui.server_manager
 
-import tornadofx.*
+import tornadofx.Controller
 
 class ServerManagerController : Controller() {}
