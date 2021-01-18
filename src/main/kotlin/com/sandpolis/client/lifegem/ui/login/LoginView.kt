@@ -18,6 +18,7 @@ import com.sandpolis.core.foundation.util.ValidationUtil
 import com.sandpolis.core.instance.state.st.STDocument
 import com.sandpolis.core.net.connection.Connection
 import com.sandpolis.core.net.connection.ConnectionStore.ConnectionStore
+import com.sandpolis.core.instance.state.ConnectionOid
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.animation.Timeline
@@ -165,7 +166,7 @@ class LoginView : View("Login") {
 
                                             // Set banner information
                                             directUserSelectModel.version.set(it.getVersion())
-                                            directUserSelectModel.address.set(model.connection.getRemoteAddress())
+                                            directUserSelectModel.address.set(model.connection.get(ConnectionOid.REMOTE_ADDRESS))
 
                                             // Advance the phase
                                             model.loginPhase.set(LoginPhase.DIRECT_USER_SELECT)

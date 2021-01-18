@@ -18,7 +18,6 @@ plugins {
 	id("sandpolis-module")
 	id("sandpolis-publish")
 	id("sandpolis-soi")
-	id("com.sandpolis.gradle.codegen")
 	id("org.openjfx.javafxplugin") version "0.0.9"
 	id("com.bmuschko.docker-remote-api") version "6.6.0"
 	kotlin("jvm") version "1.4.21"
@@ -70,11 +69,6 @@ dependencies {
 	
 	implementation("no.tornado:tornadofx:2.0.0-SNAPSHOT")
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.10")
-}
-
-codegen {
-	stateTree = project(":module:com.sandpolis.core.instance").file("state.json")
-	javaFxStateTree = true
 }
 
 task<Sync>("assembleLib") {

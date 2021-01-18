@@ -15,6 +15,7 @@ import static com.sandpolis.core.instance.MainDispatch.register;
 import static com.sandpolis.core.instance.plugin.PluginStore.PluginStore;
 import static com.sandpolis.core.instance.pref.PrefStore.PrefStore;
 import static com.sandpolis.core.instance.profile.ProfileStore.ProfileStore;
+import static com.sandpolis.core.instance.state.InstanceOid.InstanceOid;
 import static com.sandpolis.core.instance.state.STStore.STStore;
 import static com.sandpolis.core.instance.thread.ThreadStore.ThreadStore;
 import static com.sandpolis.core.net.connection.ConnectionStore.ConnectionStore;
@@ -36,9 +37,7 @@ import com.sandpolis.core.instance.MainDispatch;
 import com.sandpolis.core.instance.MainDispatch.InitializationTask;
 import com.sandpolis.core.instance.MainDispatch.ShutdownTask;
 import com.sandpolis.core.instance.MainDispatch.Task;
-import com.sandpolis.core.instance.profile.Profile;
 import com.sandpolis.core.instance.state.st.ephemeral.EphemeralDocument;
-import com.sandpolis.core.instance.state.vst.VirtCollection;
 
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.UnorderedThreadPoolEventExecutor;
@@ -102,7 +101,7 @@ public final class Client {
 		});
 
 		ProfileStore.init(config -> {
-			config.collection = new VirtCollection<Profile>(STStore.root(), Profile::new);
+			config.collection = STStore.get(InstanceOid().profile);
 		});
 
 		ThreadStore.init(config -> {
@@ -144,11 +143,11 @@ public final class Client {
 		});
 
 		ConnectionStore.init(config -> {
-			config.collection = ProfileStore.getByUuid(Core.UUID).get().connection();
+			config.collection = STStore.get(InstanceOid().profile(Core.UUID).connection);
 		});
 
 		PluginStore.init(config -> {
-			config.collection = ProfileStore.getByUuid(Core.UUID).get().plugin();
+			config.collection = STStore.get(InstanceOid().profile(Core.UUID).plugin);
 		});
 
 		return outcome.success();

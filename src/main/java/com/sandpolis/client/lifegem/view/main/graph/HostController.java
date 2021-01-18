@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import com.sandpolis.client.lifegem.ui.common.controller.AbstractController;
 import com.sandpolis.core.instance.profile.Profile;
+import com.sandpolis.core.instance.state.ProfileOid;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -50,7 +51,7 @@ public class HostController extends AbstractController {
 	public void setProfile(Profile profile) {
 		this.profile = Objects.requireNonNull(profile);
 
-		switch (profile.getInstanceType()) {
+		switch (profile.get(ProfileOid.INSTANCE_TYPE)) {
 		case AGENT:
 			image.setImage(new Image("/image/icon32/common/agent.png"));
 		case SERVER:
