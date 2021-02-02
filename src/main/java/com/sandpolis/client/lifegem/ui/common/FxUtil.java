@@ -21,7 +21,13 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.sandpolis.client.lifegem.ui.common.controller.AbstractController;
+import com.sandpolis.core.instance.state.st.STAttribute;
+import com.sandpolis.core.instance.state.st.STDocument;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 
 /**
@@ -127,6 +133,17 @@ public final class FxUtil {
 
 		Arrays.stream(parameters).forEach(controller.getBus()::post);
 		return node;
+	}
+
+	public static <T> ObservableValue<T> newProperty(STAttribute<T> attribute) {
+		var prop = new SimpleObjectProperty<>(attribute.get());
+		// TODO add weak listener
+		return prop;
+	}
+
+	public static ObservableList<STDocument> newObservable(STDocument document) {
+		ObservableList<STDocument> list = FXCollections.observableArrayList(document.documents());
+		return list;
 	}
 
 	private FxUtil() {

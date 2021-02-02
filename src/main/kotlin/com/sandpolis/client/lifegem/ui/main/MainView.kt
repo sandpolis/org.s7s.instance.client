@@ -10,8 +10,17 @@
 
 package com.sandpolis.client.lifegem.ui.main
 
+import com.sandpolis.client.lifegem.ui.common.FxUtil
 import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
+import com.sandpolis.core.instance.state.ConnectionOid
+import com.sandpolis.core.instance.state.InstanceOid
+import com.sandpolis.core.instance.state.ProfileOid
+import com.sandpolis.core.instance.state.STStore
 import com.sandpolis.core.instance.state.st.STDocument
+import com.sandpolis.core.net.connection.ConnectionStore
+import com.sandpolis.core.net.network.NetworkStore
+import com.sandpolis.core.net.state.STCmd
+import com.sandpolis.core.net.state.st.entangled.EntangledDocument
 import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -19,11 +28,11 @@ import tornadofx.*
 
 class MainView : View("Main") {
 
-    val profiles: ObservableList<STDocument> = FXCollections.observableArrayList()
+    val profiles = FxUtil.newObservable(STStore.STStore.get(InstanceOid.InstanceOid().profile))
 
     val hostList = tableview(profiles) {
-        column<STDocument, String>("") {
-            ReadOnlyObjectWrapper("")
+        column<STDocument, String>("Test") {
+            FxUtil.newProperty(it.value.attribute(ProfileOid.UUID))
         }
     }
 
@@ -47,5 +56,18 @@ class MainView : View("Main") {
         center = CarouselPane(hostList).apply {
 
         }
+    }
+
+    override fun onDock() {
+        val preferredServer = NetworkStore.NetworkStore.preferredServer
+
+        preferredServer.flatMap {
+            ConnectionStore.ConnectionStore.getByCvid(it)
+        }.ifPresent {
+            STCmd.async().target(it).sync(InstanceOid.InstanceOid().profile(it.get(ConnectionOid.REMOTE_UUID)))
+        }
+    }
+
+    override fun onUndock() {
     }
 }
