@@ -68,7 +68,7 @@ dependencies {
 	implementation("javax.persistence:javax.persistence-api:2.2")
 	
 	implementation("no.tornado:tornadofx:2.0.0-SNAPSHOT")
-	implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.10")
+	implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.30")
 }
 
 task<Sync>("assembleLib") {
