@@ -19,10 +19,8 @@ jobs:
     - name: Checkout root repository
       uses: actions/checkout@v2
       with:
-        repository: sandpolis/sandpolis
-    - name: Checkout submodules
-      run: |
-        git submodule update --init --remote --merge com.sandpolis.client.lifegem
+        repository: sandpolis/com.sandpolis.client.lifegem
+        submodules: recursive
     - name: Execute build
       run: |
-        gradle --no-daemon :com.sandpolis.client.lifegem:build -x javadoc
+        gradle --no-daemon :build -x javadoc
