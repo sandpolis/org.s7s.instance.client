@@ -31,13 +31,13 @@ repositories {
 
 tasks.withType<KotlinCompile>().configureEach {
 	kotlinOptions {
-		jvmTarget = "15"
+		jvmTarget = "16"
 	}
 }
 
 javafx {
 	modules = listOf( "javafx.controls", "javafx.fxml", "javafx.graphics" )
-	version = "15"
+	version = "16"
 }
 
 sourceSets {
@@ -56,8 +56,6 @@ dependencies {
 	testImplementation("org.testfx:openjfx-monocle:jdk-12.0.1+2")
 	testImplementation("org.awaitility:awaitility:4.0.1")
 
-	implementation(project(":module:com.sandpolis.core.client"))
-
 	// https://github.com/sirolf2009/fxgraph
 	implementation("com.sirolf2009:fxgraph:0.0.3")
 
@@ -69,6 +67,12 @@ dependencies {
 	
 	implementation("no.tornado:tornadofx:2.0.0-SNAPSHOT")
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.10")
+
+	if (project.getParent() == null) {
+		implementation("com.sandpolis:core.client:0.1.0")
+	} else {
+		implementation(project(":module:com.sandpolis.core.client"))
+	}
 }
 
 task<Sync>("assembleLib") {

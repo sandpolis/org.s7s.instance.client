@@ -1,0 +1,3 @@
+[submodule "buildSrc"]
+	path = buildSrc
+	url = ../com.sandpolis.build
