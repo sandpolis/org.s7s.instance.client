@@ -66,7 +66,7 @@ dependencies {
 	implementation("javax.persistence:javax.persistence-api:2.2")
 	
 	implementation("no.tornado:tornadofx:2.0.0-SNAPSHOT")
-	implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.10")
+	implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.32")
 
 	if (project.getParent() == null) {
 		implementation("com.sandpolis:core.client:0.1.0")
