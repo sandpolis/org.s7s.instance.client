@@ -30,13 +30,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sandpolis.client.lifegem.ui.common.FxUtil;
-import com.sandpolis.core.foundation.Config;
 import com.sandpolis.core.instance.Core;
 import com.sandpolis.core.instance.Environment;
 import com.sandpolis.core.instance.MainDispatch;
 import com.sandpolis.core.instance.MainDispatch.InitializationTask;
 import com.sandpolis.core.instance.MainDispatch.ShutdownTask;
 import com.sandpolis.core.instance.MainDispatch.Task;
+import com.sandpolis.core.instance.config.CfgInstance;
 import com.sandpolis.core.instance.state.st.ephemeral.EphemeralDocument;
 
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -72,13 +72,10 @@ public final class Client {
 	@InitializationTask(name = "Load runtime environment", fatal = true)
 	private static final Task loadEnvironment = new Task(outcome -> {
 
-		// TODO move
-		Config.MESSAGE_TIMEOUT.register(1000);
-
-		Config.PATH_CFG.register();
-		Config.PATH_LOG.register();
-		Config.PATH_LIB.register();
-		Config.PATH_PLUGIN.register();
+		CfgInstance.PATH_CFG.register();
+		CfgInstance.PATH_LOG.register();
+		CfgInstance.PATH_LIB.register();
+		CfgInstance.PATH_PLUGIN.register();
 
 		Environment.CFG.requireReadable();
 		Environment.LIB.requireReadable();
@@ -172,7 +169,7 @@ public final class Client {
 	 */
 	@InitializationTask(name = "Load client plugins")
 	private static final Task loadPlugins = new Task(outcome -> {
-		if (!Config.PLUGIN_ENABLED.value().orElse(true))
+		if (!CfgInstance.PLUGIN_ENABLED.value().orElse(true))
 			return outcome.skipped();
 
 		PluginStore.scanPluginDirectory();

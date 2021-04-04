@@ -31,7 +31,7 @@ repositories {
 
 tasks.withType<KotlinCompile>().configureEach {
 	kotlinOptions {
-		jvmTarget = "16"
+		jvmTarget = "15"
 	}
 }
 

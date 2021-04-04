@@ -44,7 +44,7 @@ class LoginView : View("Login") {
     private val PING_PERIOD: Long = 1500
 
     private enum class LoginPhase {
-        SERVER_SELECT, DIRECT_USER_SELECT, CLOUD_SERVER_SELECT, DIRECT_PLUGIN_SELECT
+        SERVER_SELECT, DIRECT_USER_SELECT, CLOUD_SERVER_SELECT, DIRECT_PLUGIN_SELECT, COMPLETE
     }
 
     private val model =
@@ -320,7 +320,7 @@ class LoginView : View("Login") {
                                             //STCmd.async().target(model.connection).snapshot(InstanceOid.InstanceOid().profile(model.connection.getRemoteUuid()).plugin).toCompletableFuture().join()
                                         } ui {
                                             directUserSelectModel.status.set("")
-                                            replaceWith(MainView::class, transition = ViewTransition.FadeThrough(1.seconds))
+                                            model.loginPhase.set(LoginPhase.COMPLETE)
                                         }
                                     } else {
                                         model.pending.set(false)
@@ -359,7 +359,11 @@ class LoginView : View("Login") {
             add(LoginPhase.DIRECT_USER_SELECT.name, userSelection)
             add(LoginPhase.DIRECT_PLUGIN_SELECT.name, pluginSelection)
             model.loginPhase.addListener { _,_,n ->
-                moveTo(n.name)
+                if (n == LoginPhase.COMPLETE) {
+                    replaceWith(MainView::class, transition = ViewTransition.FadeThrough(1.seconds))
+                } else {
+                    moveTo(n.name)
+                }
             }
         }
     }

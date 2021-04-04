@@ -15,6 +15,7 @@ import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
 import com.sandpolis.core.instance.state.ConnectionOid
 import com.sandpolis.core.instance.state.InstanceOid
 import com.sandpolis.core.instance.state.ProfileOid
+import com.sandpolis.core.instance.state.AgentOid
 import com.sandpolis.core.instance.state.STStore
 import com.sandpolis.core.instance.state.st.STDocument
 import com.sandpolis.core.net.connection.ConnectionStore
@@ -31,8 +32,14 @@ class MainView : View("Main") {
     val profiles = FxUtil.newObservable(STStore.STStore.get(InstanceOid.InstanceOid().profile))
 
     val hostList = tableview(profiles) {
-        column<STDocument, String>("Test") {
+        column<STDocument, String>("UUID") {
             FxUtil.newProperty(it.value.attribute(ProfileOid.UUID))
+        }
+        column<STDocument, String>("IP Address") {
+            FxUtil.newProperty(it.value.attribute(ProfileOid.IP_ADDRESS))
+        }
+        column<STDocument, String>("Hostname") {
+            FxUtil.newProperty(it.value.attribute(AgentOid.HOSTNAME))
         }
     }
 
