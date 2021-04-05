@@ -9,18 +9,22 @@
 //============================================================================//
 package com.sandpolis.client.lifegem.ui.common;
 
+import static com.sandpolis.core.instance.state.STStore.STStore;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.sandpolis.client.lifegem.ui.common.controller.AbstractController;
+import com.sandpolis.core.instance.state.oid.AbsoluteOid;
 import com.sandpolis.core.instance.state.st.STAttribute;
 import com.sandpolis.core.instance.state.st.STDocument;
 
@@ -136,14 +140,15 @@ public final class FxUtil {
 	}
 
 	public static <T> ObservableValue<T> newProperty(STAttribute<T> attribute) {
-		var prop = new SimpleObjectProperty<>(attribute.get());
-		// TODO add weak listener
-		return prop;
+		return new ObservableSTAttribute<>(attribute);
 	}
 
-	public static ObservableList<STDocument> newObservable(STDocument document) {
-		ObservableList<STDocument> list = FXCollections.observableArrayList(document.documents());
-		return list;
+	public static ObservableList<STDocument> newObservable(AbsoluteOid<STDocument> oid) {
+		return newObservable(oid, d -> true);
+	}
+
+	public static ObservableList<STDocument> newObservable(AbsoluteOid<STDocument> oid, Predicate<STDocument> filter) {
+		return new ObservableSTDocument(STStore.get(oid), filter);
 	}
 
 	private FxUtil() {

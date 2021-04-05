@@ -12,6 +12,7 @@ package com.sandpolis.client.lifegem.ui.main
 
 import com.sandpolis.client.lifegem.ui.common.FxUtil
 import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
+import com.sandpolis.core.instance.Metatypes
 import com.sandpolis.core.instance.state.ConnectionOid
 import com.sandpolis.core.instance.state.InstanceOid
 import com.sandpolis.core.instance.state.ProfileOid
@@ -29,7 +30,10 @@ import tornadofx.*
 
 class MainView : View("Main") {
 
-    val profiles = FxUtil.newObservable(STStore.STStore.get(InstanceOid.InstanceOid().profile))
+    val profiles = FxUtil.newObservable(InstanceOid.InstanceOid().profile) {
+        val attr = it.getAttribute(ProfileOid.INSTANCE_TYPE)
+        attr != null && attr.get() == Metatypes.InstanceType.AGENT;
+    }
 
     val hostList = tableview(profiles) {
         column<STDocument, String>("UUID") {
@@ -41,6 +45,10 @@ class MainView : View("Main") {
         column<STDocument, String>("Hostname") {
             FxUtil.newProperty(it.value.attribute(AgentOid.HOSTNAME))
         }
+        val expander = rowExpander {
+
+        }
+        expander.isVisible = false
     }
 
     override val root = borderpane {
@@ -71,7 +79,7 @@ class MainView : View("Main") {
         preferredServer.flatMap {
             ConnectionStore.ConnectionStore.getByCvid(it)
         }.ifPresent {
-            STCmd.async().target(it).sync(InstanceOid.InstanceOid().profile(it.get(ConnectionOid.REMOTE_UUID)))
+            STCmd.async().target(it).sync(InstanceOid.InstanceOid().profile)
         }
     }
 
