@@ -166,7 +166,7 @@ class LoginView : View("Login") {
 
                                             // Set banner information
                                             directUserSelectModel.version.set(it.getVersion())
-                                            directUserSelectModel.address.set(model.connection.get(ConnectionOid.REMOTE_ADDRESS))
+                                            directUserSelectModel.address.set(model.connection.get(ConnectionOid.REMOTE_ADDRESS).asString())
 
                                             // Advance the phase
                                             model.loginPhase.set(LoginPhase.DIRECT_USER_SELECT)

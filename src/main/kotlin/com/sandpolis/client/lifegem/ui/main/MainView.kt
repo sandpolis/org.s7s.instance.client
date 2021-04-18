@@ -31,8 +31,8 @@ import tornadofx.*
 class MainView : View("Main") {
 
     val profiles = FxUtil.newObservable(InstanceOid.InstanceOid().profile) {
-        val attr = it.getAttribute(ProfileOid.INSTANCE_TYPE)
-        attr != null && attr.get() == Metatypes.InstanceType.AGENT;
+        val attr = it.attribute(ProfileOid.INSTANCE_TYPE)
+        attr != null && attr.asInstanceType() == Metatypes.InstanceType.AGENT;
     }
 
     val hostList = tableview(profiles) {

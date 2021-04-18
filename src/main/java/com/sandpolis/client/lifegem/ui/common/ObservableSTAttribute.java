@@ -17,13 +17,13 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public class ObservableSTAttribute<T> extends SimpleObjectProperty<T> {
 
-	public ObservableSTAttribute(STAttribute<T> attribute) {
-		set(attribute.get());
+	public ObservableSTAttribute(STAttribute attribute) {
+		set((T) attribute.get());
 	}
 
 	@Subscribe
-	public void onAttributeChange(ChangeEvent<T> event) {
-		set(event.newValue.get());
+	public void onAttributeChange(ChangeEvent event) {
+		set((T) event.newValue().value());
 	}
 
 }

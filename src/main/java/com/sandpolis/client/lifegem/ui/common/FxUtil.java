@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.sandpolis.client.lifegem.ui.common.controller.AbstractController;
-import com.sandpolis.core.instance.state.oid.AbsoluteOid;
+import com.sandpolis.core.instance.state.oid.Oid;
 import com.sandpolis.core.instance.state.st.STAttribute;
 import com.sandpolis.core.instance.state.st.STDocument;
 
@@ -139,16 +139,16 @@ public final class FxUtil {
 		return node;
 	}
 
-	public static <T> ObservableValue<T> newProperty(STAttribute<T> attribute) {
+	public static <T> ObservableValue<T> newProperty(STAttribute attribute) {
 		return new ObservableSTAttribute<>(attribute);
 	}
 
-	public static ObservableList<STDocument> newObservable(AbsoluteOid<STDocument> oid) {
+	public static ObservableList<STDocument> newObservable(Oid oid) {
 		return newObservable(oid, d -> true);
 	}
 
-	public static ObservableList<STDocument> newObservable(AbsoluteOid<STDocument> oid, Predicate<STDocument> filter) {
-		return new ObservableSTDocument(STStore.get(oid), filter);
+	public static ObservableList<STDocument> newObservable(Oid oid, Predicate<STDocument> filter) {
+		return new ObservableSTDocument(oid.get(), filter);
 	}
 
 	private FxUtil() {

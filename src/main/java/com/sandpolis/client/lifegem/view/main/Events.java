@@ -11,7 +11,7 @@ package com.sandpolis.client.lifegem.view.main;
 
 import java.util.List;
 
-import com.sandpolis.core.instance.state.oid.AbsoluteOid;
+import com.sandpolis.core.instance.state.oid.Oid;
 import com.sandpolis.core.instance.state.st.STAttribute;
 import com.sandpolis.core.instance.store.event.Event;
 import com.sandpolis.core.instance.store.event.ParameterizedEvent;
@@ -23,7 +23,7 @@ public final class Events {
 	/**
 	 * Close the main menu.
 	 */
-	public static class MenuCloseEvent extends Event {
+	public static record MenuCloseEvent() {
 	}
 
 	/**
@@ -38,7 +38,7 @@ public final class Events {
 	/**
 	 * Close the host detail.
 	 */
-	public static class HostDetailCloseEvent extends Event {
+	public static record HostDetailCloseEvent() {
 	}
 
 	/**
@@ -53,8 +53,8 @@ public final class Events {
 	/**
 	 * Change the headers in the host list.
 	 */
-	public static class HostListHeaderChangeEvent extends ParameterizedEvent<List<AbsoluteOid<STAttribute<?>>>> {
-		public HostListHeaderChangeEvent(List<AbsoluteOid<STAttribute<?>>> parameter) {
+	public static class HostListHeaderChangeEvent extends ParameterizedEvent<List<Oid>> {
+		public HostListHeaderChangeEvent(List<Oid> parameter) {
 			super(parameter);
 		}
 	}

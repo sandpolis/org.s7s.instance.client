@@ -37,7 +37,7 @@ import com.sandpolis.core.instance.MainDispatch.InitializationTask;
 import com.sandpolis.core.instance.MainDispatch.ShutdownTask;
 import com.sandpolis.core.instance.MainDispatch.Task;
 import com.sandpolis.core.instance.config.CfgInstance;
-import com.sandpolis.core.instance.state.st.ephemeral.EphemeralDocument;
+import com.sandpolis.core.instance.state.st.EphemeralDocument;
 
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.UnorderedThreadPoolEventExecutor;
@@ -94,7 +94,7 @@ public final class Client {
 
 		STStore.init(config -> {
 			config.concurrency = 1;
-			config.root = new EphemeralDocument();
+			config.root = new EphemeralDocument(null, null);
 		});
 
 		ProfileStore.init(config -> {
