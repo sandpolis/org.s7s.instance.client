@@ -20,8 +20,8 @@ import com.fxgraph.graph.Graph;
 import com.fxgraph.graph.Model;
 import com.google.common.eventbus.Subscribe;
 import com.sandpolis.client.lifegem.ui.common.controller.AbstractController;
-import com.sandpolis.core.net.connection.ConnectionEvents.SockEstablishedEvent;
-import com.sandpolis.core.net.connection.ConnectionEvents.SockLostEvent;
+import com.sandpolis.core.net.connection.ConnectionStore.SockEstablishedEvent;
+import com.sandpolis.core.net.connection.ConnectionStore.SockLostEvent;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;

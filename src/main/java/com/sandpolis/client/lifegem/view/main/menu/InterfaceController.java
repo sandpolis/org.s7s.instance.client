@@ -32,22 +32,22 @@ public class InterfaceController extends AbstractController {
 
 	@FXML
 	private void open_list() {
-		post(ViewChangeEvent::new, "list");
+		post(new ViewChangeEvent("list"));
 	}
 
 	@FXML
 	private void open_graph() {
-		post(ViewChangeEvent::new, "graph");
+		post(new ViewChangeEvent("graph"));
 	}
 
 	@FXML
 	private void open_console() {
-		post(AuxDetailOpenEvent::new, "console");
+		post(new AuxDetailOpenEvent("console"));
 	}
 
 	@FXML
 	private void open_status() {
-		post(AuxDetailOpenEvent::new, "status");
+		post(new AuxDetailOpenEvent("status"));
 	}
 
 	@FXML

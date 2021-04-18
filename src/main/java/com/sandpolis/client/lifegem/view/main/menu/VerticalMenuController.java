@@ -50,27 +50,27 @@ public class VerticalMenuController extends AbstractController {
 
 	@FXML
 	public void btn_interface(ActionEvent event) {
-		post(MenuOpenEvent::new, pane_interface);
+		post(new MenuOpenEvent(pane_interface));
 	}
 
 	@FXML
 	public void btn_management(ActionEvent event) {
-		post(MenuOpenEvent::new, pane_management);
+		post(new MenuOpenEvent(pane_management));
 	}
 
 	@FXML
 	public void btn_generator(ActionEvent event) {
-		post(MenuOpenEvent::new, pane_generator);
+		post(new MenuOpenEvent(pane_generator));
 	}
 
 	@FXML
 	public void btn_configuration(ActionEvent event) {
-		post(MenuOpenEvent::new, pane_configuration);
+		post(new MenuOpenEvent(pane_configuration));
 	}
 
 	@FXML
 	public void btn_about(ActionEvent event) {
-		post(MenuOpenEvent::new, pane_about);
+		post(new MenuOpenEvent(pane_about));
 	}
 
 }

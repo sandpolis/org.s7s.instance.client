@@ -13,12 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import com.google.common.eventbus.EventBus;
-import com.sandpolis.core.instance.store.event.Event;
-import com.sandpolis.core.instance.store.event.ParameterizedEvent;
 
 /**
  * A superclass for controllers that need access to an {@link EventBus}.
@@ -87,21 +83,11 @@ public abstract class AbstractController {
 	}
 
 	/**
-	 * Post the given {@link Event} to the {@link EventBus}.
+	 * Post the given event to the {@link EventBus}.
 	 *
-	 * @param constructor The event constructor
+	 * @param event The event to post
 	 */
-	protected void post(Supplier<? extends Event> constructor) {
-		bus.post(constructor.get());
-	}
-
-	/**
-	 * Post the given {@link ParameterizedEvent} to the {@link EventBus}.
-	 *
-	 * @param constructor The event constructor
-	 * @param parameter   The event parameter
-	 */
-	protected <P> void post(Function<P, ? extends ParameterizedEvent<P>> constructor, P parameter) {
-		bus.post(constructor.apply(parameter));
+	protected void post(Object event) {
+		bus.post(event);
 	}
 }
