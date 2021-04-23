@@ -36,7 +36,8 @@ public class ObservableSTDocument extends ModifiableObservableListBase<STDocumen
 
 	@Subscribe
 	public void onDocumentAdded(DocumentAddedEvent event) {
-		if (document == event.document() && filter.test(event.newDocument())) {
+
+		if (document.oid().equals(event.document().oid()) && filter.test(event.newDocument())) {
 			add(event.newDocument());
 		}
 	}

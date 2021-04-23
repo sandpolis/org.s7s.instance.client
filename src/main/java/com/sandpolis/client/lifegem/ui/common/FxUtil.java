@@ -9,14 +9,13 @@
 //============================================================================//
 package com.sandpolis.client.lifegem.ui.common;
 
-import static com.sandpolis.core.instance.state.STStore.STStore;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.slf4j.Logger;
@@ -28,9 +27,7 @@ import com.sandpolis.core.instance.state.oid.Oid;
 import com.sandpolis.core.instance.state.st.STAttribute;
 import com.sandpolis.core.instance.state.st.STDocument;
 
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 
@@ -141,6 +138,10 @@ public final class FxUtil {
 
 	public static <T> ObservableValue<T> newProperty(STAttribute attribute) {
 		return new ObservableSTAttribute<>(attribute);
+	}
+
+	public static <T> ObservableValue<T> newProperty(STAttribute attribute, Function<Object, T> converter) {
+		return new ObservableSTAttribute<>(attribute, converter);
 	}
 
 	public static ObservableList<STDocument> newObservable(Oid oid) {

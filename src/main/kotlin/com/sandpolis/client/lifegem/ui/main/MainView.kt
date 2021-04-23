@@ -12,6 +12,7 @@ package com.sandpolis.client.lifegem.ui.main
 
 import com.sandpolis.client.lifegem.ui.common.FxUtil
 import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
+import com.sandpolis.core.foundation.Platform
 import com.sandpolis.core.instance.Metatypes
 import com.sandpolis.core.instance.state.ConnectionOid
 import com.sandpolis.core.instance.state.InstanceOid
@@ -22,33 +23,71 @@ import com.sandpolis.core.instance.state.st.STDocument
 import com.sandpolis.core.net.connection.ConnectionStore
 import com.sandpolis.core.net.network.NetworkStore
 import com.sandpolis.core.net.state.STCmd
-import com.sandpolis.core.net.state.st.entangled.EntangledDocument
-import javafx.beans.property.ReadOnlyObjectWrapper
-import javafx.collections.FXCollections
-import javafx.collections.ObservableList
+import javafx.scene.image.ImageView
+import javafx.scene.layout.Pane
+import javafx.scene.paint.Color
 import tornadofx.*
 
 class MainView : View("Main") {
 
     val profiles = FxUtil.newObservable(InstanceOid.InstanceOid().profile) {
-        val attr = it.attribute(ProfileOid.INSTANCE_TYPE)
-        attr != null && attr.asInstanceType() == Metatypes.InstanceType.AGENT;
+        //val attr = it.attribute(ProfileOid.INSTANCE_TYPE)
+        //attr.isPresent() && attr.asInstanceType() == Metatypes.InstanceType.AGENT;
+        true
     }
 
     val hostList = tableview(profiles) {
-        column<STDocument, String>("UUID") {
-            FxUtil.newProperty(it.value.attribute(ProfileOid.UUID))
+        column<STDocument, String>("Hostname") {
+            FxUtil.newProperty(it.value.attribute(AgentOid.HOSTNAME))
         }
         column<STDocument, String>("IP Address") {
             FxUtil.newProperty(it.value.attribute(ProfileOid.IP_ADDRESS))
         }
-        column<STDocument, String>("Hostname") {
-            FxUtil.newProperty(it.value.attribute(AgentOid.HOSTNAME))
+        column<STDocument, Pane>("OS Type") {
+            FxUtil.newProperty(it.value.attribute(AgentOid.OS_TYPE)) { value ->
+                when (value) {
+                    Platform.OsType.LINUX -> hbox {
+                        imageview("image/platform/linux.png")
+                        label("Linux")
+                    }
+                    else -> hbox {
+                    }
+                }
+            }
         }
-        val expander = rowExpander {
+        column<STDocument, String>("Uptime") {
+            FxUtil.newProperty(it.value.attribute(AgentOid.START_TIME))
+        }
+        column<STDocument, String>("Last Contact") {
+            FxUtil.newProperty(it.value.attribute(AgentOid.CONTACT_TIME))
+        }
+        column<STDocument, String>("Latency") {
+            FxUtil.newProperty(it.value.attribute(ProfileOid.LATENCY))
+        }
 
+        val expander = rowExpander {
+            paddingLeft = 6
+            tabpane {
+                tab("Metadata") {
+                    vbox {
+                        hbox {
+                            button("Reboot")
+                        }
+                        form {
+                            fieldset("Test") {
+                                field("UUID") {
+                                    label(it.attribute(ProfileOid.UUID).asString())
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         expander.isVisible = false
+        selectionModel.selectedItemProperty().onChange {
+            expander.getExpandedProperty(it).set(true)
+        }
     }
 
     override val root = borderpane {

@@ -37,6 +37,7 @@ import com.sandpolis.core.instance.MainDispatch.InitializationTask;
 import com.sandpolis.core.instance.MainDispatch.ShutdownTask;
 import com.sandpolis.core.instance.MainDispatch.Task;
 import com.sandpolis.core.instance.config.CfgInstance;
+import com.sandpolis.core.instance.state.oid.Oid;
 import com.sandpolis.core.instance.state.st.EphemeralDocument;
 
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -98,7 +99,7 @@ public final class Client {
 		});
 
 		ProfileStore.init(config -> {
-			config.collection = STStore.get(InstanceOid().profile);
+			config.collection = Oid.of("/profile").get();
 		});
 
 		ThreadStore.init(config -> {
@@ -137,14 +138,15 @@ public final class Client {
 		});
 
 		NetworkStore.init(config -> {
+			config.collection = Oid.of("/network_connection").get();
 		});
 
 		ConnectionStore.init(config -> {
-			config.collection = STStore.get(InstanceOid().profile(Core.UUID).connection);
+			config.collection = Oid.of("/connection").get();
 		});
 
 		PluginStore.init(config -> {
-			config.collection = STStore.get(InstanceOid().profile(Core.UUID).plugin);
+			config.collection = Oid.of("/profile//plugin", Core.UUID).get();
 		});
 
 		return outcome.success();
