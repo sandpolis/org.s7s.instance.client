@@ -20,7 +20,7 @@ plugins {
 	id("sandpolis-soi")
 	id("org.openjfx.javafxplugin") version "0.0.9"
 	id("com.bmuschko.docker-remote-api") version "6.6.0"
-	kotlin("jvm") version "1.4.32"
+	kotlin("jvm") version "1.5.0"
 }
 
 repositories {
