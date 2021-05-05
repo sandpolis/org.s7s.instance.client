@@ -10,6 +10,7 @@
 package com.sandpolis.client.lifegem.ui.common.pane;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -110,10 +111,10 @@ public class CarouselPane extends StackPane {
 	/**
 	 * Create a new {@code CarouselPane} from the given components.
 	 *
-	 * @param first First node in the carousel
+	 * @param nodes Nodes in the carousel
 	 */
-	public CarouselPane(Node first) {
-		views.add(first);
+	public CarouselPane(Node... nodes) {
+		Arrays.stream(nodes).forEach(views::add);
 		getChildren().add(views.get(0));
 
 		current.addListener((p, o, n) -> {
@@ -242,6 +243,18 @@ public class CarouselPane extends StackPane {
 	 */
 	public void moveForward(int n) {
 		current.set(current.get() + n);
+	}
+
+	/**
+	 * Move the view to the page with the given index.
+	 *
+	 * @param name The page's index
+	 */
+	public void moveTo(int index) {
+		if (index > views.size()) {
+			throw new IllegalArgumentException();
+		}
+		current.set(index);
 	}
 
 	/**

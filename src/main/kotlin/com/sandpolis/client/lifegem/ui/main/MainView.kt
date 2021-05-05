@@ -12,6 +12,10 @@ package com.sandpolis.client.lifegem.ui.main
 
 import com.sandpolis.client.lifegem.ui.common.FxUtil
 import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
+import com.sandpolis.client.lifegem.ui.common.pane.ExtendPane
+import com.sandpolis.client.lifegem.ui.Events.MainMenuOpenEvent
+import com.sandpolis.client.lifegem.ui.Events.MainViewChangeEvent
+import javafx.geometry.Side
 import com.sandpolis.core.foundation.Platform
 import com.sandpolis.core.instance.Metatypes
 import com.sandpolis.core.instance.state.ConnectionOid
@@ -25,23 +29,25 @@ import com.sandpolis.core.net.network.NetworkStore
 import com.sandpolis.core.net.state.STCmd
 import javafx.scene.image.ImageView
 import javafx.scene.layout.Pane
+import javafx.scene.control.TitledPane
 import javafx.scene.paint.Color
 import tornadofx.*
 
 class MainView : View("Main") {
 
     val profiles = FxUtil.newObservable(InstanceOid.InstanceOid().profile) {
-        //val attr = it.attribute(ProfileOid.INSTANCE_TYPE)
-        //attr.isPresent() && attr.asInstanceType() == Metatypes.InstanceType.AGENT;
-        true
+        val attr = it.attribute(ProfileOid.INSTANCE_TYPE)
+        attr.isPresent() && attr.asInstanceType() == Metatypes.InstanceType.AGENT;
+    }
+
+    val hostGraph = pane {
+
     }
 
     val hostList = tableview(profiles) {
+
         column<STDocument, String>("Hostname") {
             FxUtil.newProperty(it.value.attribute(AgentOid.HOSTNAME))
-        }
-        column<STDocument, String>("IP Address") {
-            FxUtil.newProperty(it.value.attribute(ProfileOid.IP_ADDRESS))
         }
         column<STDocument, Pane>("OS Type") {
             FxUtil.newProperty(it.value.attribute(AgentOid.OS_TYPE)) { value ->
@@ -50,7 +56,16 @@ class MainView : View("Main") {
                         imageview("image/platform/linux.png")
                         label("Linux")
                     }
+                    Platform.OsType.WINDOWS -> hbox {
+                        imageview("image/platform/windows_10.png")
+                        label("Windows")
+                    }
+                    Platform.OsType.DARWIN -> hbox {
+                        imageview("image/platform/osx.png")
+                        label("macOS")
+                    }
                     else -> hbox {
+                        label("Unknown")
                     }
                 }
             }
@@ -61,8 +76,11 @@ class MainView : View("Main") {
         column<STDocument, String>("Last Contact") {
             FxUtil.newProperty(it.value.attribute(AgentOid.CONTACT_TIME))
         }
-        column<STDocument, String>("Latency") {
-            FxUtil.newProperty(it.value.attribute(ProfileOid.LATENCY))
+        column<STDocument, String>("Status") {
+            FxUtil.newProperty(it.value.attribute(ProfileOid.STATUS))
+        }
+        column<STDocument, String>("Agent Path") {
+            FxUtil.newProperty(it.value.attribute(AgentOid.LOCATION))
         }
 
         val expander = rowExpander {
@@ -78,6 +96,9 @@ class MainView : View("Main") {
                                 field("UUID") {
                                     label(it.attribute(ProfileOid.UUID).asString())
                                 }
+                                field ("Upload traffic") {
+                                    label(FxUtil.newProperty<String>(it.attribute(AgentOid.CONTACT_TIME)))
+                                }
                             }
                         }
                     }
@@ -90,25 +111,22 @@ class MainView : View("Main") {
         }
     }
 
-    override val root = borderpane {
-        top {
-            menubar {
-                menu("Interface") {
-                    item("List View", "Shortcut+L")
-                    item("Graph View", "Shortcut+G")
-                    separator()
-                    item("Move to system tray") {
-                        tooltip("The application will continue running in the background and the UI will be hidden.")
-                    }
-                }
-                menu("Management")
-                menu("Help") {
-                    item("About")
-                }
-            }
-        }
-        center = CarouselPane(hostList).apply {
+    val carousel = CarouselPane(hostList, hostGraph).apply {
+        directionProperty().set(Side.TOP)
+    }
 
+    val extend = ExtendPane(carousel).apply {
+        
+    }
+
+    override val root = borderpane {
+        if ("" == "") {
+            center = extend
+            center.setViewOrder(2.0)
+            left<SideMenuView>()
+        } else {
+            center = carousel
+            top<RegularMenuView>()
         }
     }
 
@@ -123,5 +141,24 @@ class MainView : View("Main") {
     }
 
     override fun onUndock() {
+    }
+
+    init {
+        subscribe<MainViewChangeEvent> { event ->
+            when (event.view) {
+                "list" -> carousel.moveTo(0)
+                "graph" -> carousel.moveTo(1)
+                else -> {
+                }
+            }
+        }
+
+        subscribe<MainMenuOpenEvent> { event ->
+            if (event.view != extend.regionLeftProperty().get()) {
+                extend.regionLeftProperty().set(event.view)
+            } else {
+                extend.regionLeftProperty().set(null)
+            }
+        }
     }
 }

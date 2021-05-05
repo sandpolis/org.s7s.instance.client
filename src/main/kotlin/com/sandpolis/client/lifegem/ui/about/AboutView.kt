@@ -11,13 +11,77 @@
 package com.sandpolis.client.lifegem.ui.about
 
 import com.sandpolis.client.lifegem.Client.UI
+import javafx.application.ConditionalFeature
+import com.sandpolis.client.lifegem.ui.common.StlUtil
+import javafx.animation.Animation
+import javafx.scene.SubScene
+import javafx.scene.SceneAntialiasing
+import javafx.animation.KeyFrame
+import javafx.scene.transform.Rotate
+import javafx.animation.Timeline
+import javafx.application.Platform
+import javafx.beans.binding.Bindings
+import javafx.beans.property.StringProperty
+import javafx.beans.property.SimpleStringProperty
+import javafx.scene.Group
+import javafx.scene.control.Button
+import javafx.scene.control.Label
+import javafx.scene.control.TableView
+import javafx.scene.image.ImageView
+import javafx.scene.input.MouseEvent
+import javafx.scene.paint.Color
+import javafx.scene.paint.PhongMaterial
+import javafx.scene.shape.MeshView
+import javafx.util.Duration
+import java.io.IOException
+import java.lang.management.ManagementFactory
 import tornadofx.*
 
 class AboutView : View("About") {
 
+    private var x = 0.0
+    private val xSpeed = 0.1
+    private var z = 0.0
+    private val zSpeed = 0.0
+
     override val root =
-        borderpane {
-            top = pane()
+        stackpane {
+            if (Platform.isSupported(ConditionalFeature.SCENE3D)) {
+
+                // Load 3D mesh from resource
+                val meshView = MeshView(StlUtil.parse(javaClass.getResourceAsStream("/mesh/sandpolis.stl")))
+
+                // Set position
+                meshView.layoutXProperty().bind(Bindings.divide(widthProperty(), 2.0))
+                meshView.layoutYProperty().bind(Bindings.divide(heightProperty(), 2.0))
+
+                // Set material
+                val sample = PhongMaterial(Color.rgb(247, 213, 145))
+                sample.specularColor = Color.rgb(247, 213, 145)
+                sample.specularPower = 16.0
+                meshView.material = sample
+                val kf = KeyFrame(Duration.millis(2.0), {
+                    meshView.transforms.setAll(Rotate(x, Rotate.X_AXIS), Rotate(z, Rotate.Z_AXIS))
+                    x += xSpeed
+                    z += zSpeed
+                })
+                meshView.addEventHandler(MouseEvent.MOUSE_DRAGGED) { event: MouseEvent? ->
+                    // TODO
+                }
+                val tl = Timeline(kf)
+                tl.cycleCount = Animation.INDEFINITE
+                tl.play()
+
+                subscene(depthBuffer = true, antiAlias = SceneAntialiasing.BALANCED) {
+                    group {
+                        add(meshView)
+                    }
+                }
+            } else {
+                // Just show a static image
+                imageview("/image/view/about/banner.png")
+            }
+            borderpane {
             center =
                 form {
                     fieldset("Build") {
@@ -49,5 +113,6 @@ class AboutView : View("About") {
                         }
                     }
                 }
+            }
         }
 }

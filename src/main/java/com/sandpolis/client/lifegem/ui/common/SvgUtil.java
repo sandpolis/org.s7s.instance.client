@@ -21,8 +21,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -48,10 +49,19 @@ public final class SvgUtil {
 	 * @param svgFill   The fill property
 	 * @return The SVG or {@code null} if it failed to load
 	 */
-	public static Node getSvg(String url, DoubleProperty svgWidth, DoubleProperty svgHeight,
+	public static Node getSvg(String url, ReadOnlyDoubleProperty svgWidth, ReadOnlyDoubleProperty svgHeight,
 			ObjectProperty<Paint> svgFill) {
 		try (InputStream in = SvgUtil.class.getResourceAsStream(url)) {
 			return readSvg(in, svgWidth, svgHeight, svgFill);
+		} catch (Exception e) {
+			log.warn("Failed to load svg: {}", url);
+			return null;
+		}
+	}
+
+	public static Node getSvg(String url, double svgWidth, double svgHeight, ObjectProperty<Paint> svgFill) {
+		try (InputStream in = SvgUtil.class.getResourceAsStream(url)) {
+			return readSvg(in, new SimpleDoubleProperty(svgWidth), new SimpleDoubleProperty(svgHeight), svgFill);
 		} catch (Exception e) {
 			log.warn("Failed to load svg: {}", url);
 			return null;
@@ -68,7 +78,7 @@ public final class SvgUtil {
 	 * @return The SVG image
 	 * @throws Exception
 	 */
-	static Group readSvg(InputStream in, DoubleProperty svgWidth, DoubleProperty svgHeight,
+	static Group readSvg(InputStream in, ReadOnlyDoubleProperty svgWidth, ReadOnlyDoubleProperty svgHeight,
 			ObjectProperty<Paint> svgFill) throws Exception {
 
 		NodeList paths = (NodeList) XPathFactory.newDefaultInstance().newXPath().evaluate("/svg/g/path",

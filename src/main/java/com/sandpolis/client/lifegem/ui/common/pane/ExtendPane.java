@@ -151,7 +151,7 @@ public class ExtendPane extends BorderPane {
 		Objects.requireNonNull(side);
 
 		// TODO
-		double size = 100;
+		double size = 180;
 
 		// Bypass animation if possible
 		if (duration.get() == Duration.ZERO) {
