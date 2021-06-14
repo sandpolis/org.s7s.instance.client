@@ -10,7 +10,7 @@
 
 package com.sandpolis.client.lifegem.ui.about
 
-import com.sandpolis.client.lifegem.Client.UI
+import com.sandpolis.client.lifegem.init.LifegemLoadUserInterface.UI
 import javafx.application.ConditionalFeature
 import com.sandpolis.client.lifegem.ui.common.StlUtil
 import javafx.animation.Animation

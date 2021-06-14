@@ -9,21 +9,28 @@
 //============================================================================//
 package com.sandpolis.client.lifegem;
 
-import com.sandpolis.core.instance.MainDispatch;
+import com.sandpolis.client.lifegem.init.LifegemLoadStores;
+import com.sandpolis.client.lifegem.init.LifegemLoadUserInterface;
+import com.sandpolis.core.instance.Entrypoint;
 import com.sandpolis.core.instance.Metatypes.InstanceFlavor;
 import com.sandpolis.core.instance.Metatypes.InstanceType;
+import com.sandpolis.core.instance.init.InstanceLoadEnvironment;
+import com.sandpolis.core.instance.init.InstanceLoadPlugins;
 
-/**
- * {@code com.sandpolis.client.lifegem} entry point.
- *
- * @since 5.0.0
- */
-public final class Main {
-	private Main() {
+public final class Main extends Entrypoint {
+	private Main(String[] args) {
+		super(Main.class, InstanceType.CLIENT, InstanceFlavor.LIFEGEM);
+
+		register(new InstanceLoadEnvironment());
+		register(new LifegemLoadStores());
+		register(new InstanceLoadPlugins());
+		register(new LifegemLoadUserInterface());
+
+		start("Sandpolis Desktop Client", args);
 	}
 
 	public static void main(String[] args) {
-		MainDispatch.dispatch(Client.class, args, InstanceType.CLIENT, InstanceFlavor.LIFEGEM);
+		new Main(args);
 	}
 
 }

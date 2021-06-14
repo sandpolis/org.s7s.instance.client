@@ -70,8 +70,12 @@ dependencies {
 
 	if (project.getParent() == null) {
 		implementation("com.sandpolis:core.client:0.1.0")
+		implementation("com.sandpolis:core.net:0.2.0")
+		implementation("com.sandpolis:core.instance:0.2.0")
 	} else {
 		implementation(project(":module:com.sandpolis.core.client"))
+		implementation(project(":module:com.sandpolis.core.net"))
+		implementation(project(":module:com.sandpolis.core.instance"))
 	}
 }
 
