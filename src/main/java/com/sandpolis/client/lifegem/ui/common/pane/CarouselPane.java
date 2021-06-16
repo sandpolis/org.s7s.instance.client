@@ -248,7 +248,7 @@ public class CarouselPane extends StackPane {
 	/**
 	 * Move the view to the page with the given index.
 	 *
-	 * @param name The page's index
+	 * @param index The page's index
 	 */
 	public void moveTo(int index) {
 		if (index > views.size()) {
