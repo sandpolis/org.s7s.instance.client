@@ -45,6 +45,12 @@ jobs:
         tags: |
           sandpolis/desktop-client:latest
           sandpolis/desktop-client:${{ steps.get_version.outputs.version }}
+    - name: Update DockerHub Readme
+      uses: peter-evans/dockerhub-description@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        repository: sandpolis/desktop-client
     - name: Publish release
       uses: eskatos/gradle-command-action@v1
       with:

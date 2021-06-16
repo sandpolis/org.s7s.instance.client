@@ -69,7 +69,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.0")
 
 	if (project.getParent() == null) {
-		implementation("com.sandpolis:core.client:0.1.0")
+		implementation("com.sandpolis:core.client:0.1.1")
 		implementation("com.sandpolis:core.net:0.2.0")
 		implementation("com.sandpolis:core.instance:0.2.0")
 	} else {
