@@ -103,4 +103,8 @@ public class LifegemLoadStores extends InitTask {
 		return "Load stores";
 	}
 
+	@Override
+	public boolean fatal() {
+		return true;
+	}
 }

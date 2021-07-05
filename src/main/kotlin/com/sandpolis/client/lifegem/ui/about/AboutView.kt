@@ -34,7 +34,6 @@ import javafx.scene.paint.PhongMaterial
 import javafx.scene.shape.MeshView
 import javafx.util.Duration
 import java.io.IOException
-import java.lang.management.ManagementFactory
 import tornadofx.*
 
 class AboutView : View("About") {
