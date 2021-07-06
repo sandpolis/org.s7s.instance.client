@@ -10,6 +10,8 @@
 
 package com.sandpolis.client.lifegem.ui.server_manager
 
+import com.sandpolis.core.client.cmd.GroupCmd
+import com.sandpolis.core.instance.Group
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleStringProperty
@@ -31,6 +33,9 @@ class GroupCreatorView : View() {
     }
 
     override val root = borderpane {
+        prefWidth = 400.0
+        prefHeight = 600.0
+
         center = scrollpane {
             isFitToWidth = true
             squeezebox {
@@ -43,16 +48,15 @@ class GroupCreatorView : View() {
                                     tooltip("The descriptive name of the group")
                                     filterInput { change ->
                                         !change.isAdded ||
-                                                change.controlNewText.let {
-                                                    it.matches("^[A-Za-z0-9 ]*$".toRegex())
-                                                }
+                                                change.controlNewText.matches("^[A-Za-z0-9 ]*$".toRegex())
                                     }
                                 }
                             }
                         }
                     }
                 }
-                fold("Network") {
+                fold("Network", expanded = true) {
+                    isCollapsible = false
                     form {
                         fieldset(labelPosition = Orientation.VERTICAL) {
                             field("Server Address") {
@@ -60,9 +64,7 @@ class GroupCreatorView : View() {
                                     disableProperty().bind(model.connectionTestPending)
                                     filterInput { change ->
                                         !change.isAdded ||
-                                                change.controlNewText.let {
-                                                    it.matches("^[A-Za-z0-9\\.\\-]*$".toRegex())
-                                                }
+                                                change.controlNewText.matches("^[A-Za-z0-9\\.\\-]*$".toRegex())
                                     }
                                 }
                                 button("Test Connection") {
@@ -70,8 +72,18 @@ class GroupCreatorView : View() {
                                     tooltip("Attempt a test connection to the server")
                                 }
                             }
+                            field("Connection Type") {
+                                togglegroup {
+                                    togglebutton("Continuous") {
+
+                                    }
+                                    togglebutton("Polling") {
+
+                                    }
+                                }
+                            }
                             field("Connection Interval") {
-                                spinner(editable = true, model.connectionInterval) {
+                                spinner(min = 100, max = 100000, editable = true, initialValue = 800, amountToStepBy = 100, property = model.connectionInterval) {
                                     tooltip("The connection interval in milliseconds")
                                 }
                                 label("ms")
@@ -81,24 +93,26 @@ class GroupCreatorView : View() {
                                     tooltip(
                                             "Whether the connection will fail if the server's certificate isn't trusted")
                                 }
-                                checkbox("Polling Mode", model.pollingMode) {
-                                    tooltip(
-                                            "Whether the connection will terminate if the server has nothing to send")
-                                }
                             }
                         }
                     }
                 }
                 fold("Authentication") {
-                    togglegroup {
-                        radiobutton("Certificate") {
-                            tooltip("A client certificate will be used to authenticate agents")
-                        }
-                        radiobutton("Password") {
-                            tooltip("The given password will be used to authenticate agents")
-                        }
-                        radiobutton("No authentication") {
-                            tooltip("Agents will not use any form of authentication")
+                    form {
+                        fieldset(labelPosition = Orientation.VERTICAL) {
+                            field {
+                                togglegroup {
+                                    togglebutton("Certificate") {
+                                        tooltip("A client certificate will be used to authenticate agents")
+                                    }
+                                    togglebutton("Password") {
+                                        tooltip("The given password will be used to authenticate agents")
+                                    }
+                                    togglebutton("None") {
+                                        tooltip("Agents will not use any form of authentication")
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -126,13 +140,26 @@ class GroupCreatorView : View() {
                     checkbox("Request highest privileges")
                     form {
                         fieldset {
-                            field("Memory Reservation") { slider(100) }
-                            field("CPU Limit") { slider(100) }
+                            field("Memory Limit") {
+                                slider(min = 1, max = 100, value = 50)
+                                label("%")
+                            }
+                            field("CPU Limit") {
+                                slider(min = 1, max = 100, value = 50)
+                                label("%")
+                            }
                         }
                     }
                 }
             }
         }
-        bottom = buttonbar { button("Create Group") }
+        bottom = buttonbar {
+            button("Create Group") {
+                action {
+                    val group = Group.GroupConfig.newBuilder()
+                    GroupCmd.async().create(group.build())
+                }
+            }
+        }
     }
 }

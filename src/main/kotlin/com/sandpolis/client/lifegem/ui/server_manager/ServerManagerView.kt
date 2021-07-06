@@ -10,50 +10,66 @@
 
 package com.sandpolis.client.lifegem.ui.server_manager
 
+import com.sandpolis.client.lifegem.ui.common.FxUtil
+import com.sandpolis.core.instance.state.*
 import com.sandpolis.core.instance.state.st.STDocument
+import com.sandpolis.core.net.connection.ConnectionStore
+import com.sandpolis.core.net.network.NetworkStore
+import com.sandpolis.core.net.state.STCmd
 import javafx.beans.property.ReadOnlyObjectWrapper
-import javafx.collections.FXCollections
-import javafx.collections.ObservableList
 import tornadofx.*
 
 class ServerManagerView : View("Server Manager") {
 
     val controller: ServerManagerController by inject()
 
-    val users: ObservableList<STDocument> = FXCollections.observableArrayList()
-    val listeners: ObservableList<STDocument> = FXCollections.observableArrayList()
-    val groups: ObservableList<STDocument> = FXCollections.observableArrayList()
+    val servers = FxUtil.newObservable(InstanceOid.InstanceOid().profile.server)
+    val users = FxUtil.newObservable(InstanceOid.InstanceOid().user)
+    val listeners = FxUtil.newObservable(InstanceOid.InstanceOid().profile.server.listener)
+    val groups = FxUtil.newObservable(InstanceOid.InstanceOid().group)
 
     override  val root = drawer {
-        item("Servers") {}
+        prefWidth = 800.0
+        prefHeight = 400.0
+
+        item("Servers") {
+            tableview(listeners) {
+                column<STDocument, String>("UUID") {
+                    FxUtil.newProperty(it.value.attribute(ProfileOid.UUID))
+                }
+            }
+        }
         item("Listeners") {
             borderpane {
-                top =
+                bottom =
                     buttonbar {
-                        button("Add") {}
+                        button("Add") {
 
-                        button("Delete") {}
+                        }
                     }
                 center =
                     tableview(listeners) {
-                        column<STDocument, String>("Name") {
-                            ReadOnlyObjectWrapper("")
+                        column<STDocument, String>("Bind Address") {
+                            FxUtil.newProperty(it.value.attribute(ListenerOid.ADDRESS))
+                        }
+                        column<STDocument, String>("Listen Port") {
+                            FxUtil.newProperty(it.value.attribute(ListenerOid.PORT))
                         }
                     }
             }
         }
         item("Users") {
             borderpane {
-                top =
+                bottom =
                     buttonbar {
-                        button("Add") {}
+                        button("Add") {
 
-                        button("Delete") {}
+                        }
                     }
                 center =
                     tableview(users) {
                         column<STDocument, String>("Username") {
-                            ReadOnlyObjectWrapper("")
+                            FxUtil.newProperty(it.value.attribute(UserOid.USERNAME))
                         }
                         column<STDocument, String>("Password age") {
                             ReadOnlyObjectWrapper("")
@@ -69,16 +85,20 @@ class ServerManagerView : View("Server Manager") {
         }
         item("Agent Groups") {
             borderpane {
-                top =
+                bottom =
                     buttonbar {
-                        button("Add") {}
+                        button("Add") {
+                            action {
+                                find<GroupCreatorView>().openWindow()
+                            }
+                        }
 
                         button("Import") {}
                     }
                 center =
                     tableview(groups) {
                         column<STDocument, String>("Name") {
-                            ReadOnlyObjectWrapper("")
+                            FxUtil.newProperty(it.value.attribute(GroupOid.NAME))
                         }
                         //readonlyColumn("", FxGroup::name) {
                         //    cellFormat { graphic = button("1") }
@@ -86,5 +106,18 @@ class ServerManagerView : View("Server Manager") {
                     }
             }
         }
+    }
+
+    override fun onDock() {
+        val preferredServer = NetworkStore.NetworkStore.preferredServer
+
+        preferredServer.flatMap {
+            ConnectionStore.ConnectionStore.getByCvid(it)
+        }.ifPresent {
+            STCmd.async().target(it).sync(InstanceOid.InstanceOid().user)
+        }
+    }
+
+    override fun onUndock() {
     }
 }

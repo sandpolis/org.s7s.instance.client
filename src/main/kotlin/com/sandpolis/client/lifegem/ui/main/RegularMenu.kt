@@ -11,6 +11,7 @@
 package com.sandpolis.client.lifegem.ui.main
 
 import com.sandpolis.client.lifegem.ui.about.AboutView
+import com.sandpolis.client.lifegem.ui.server_manager.ServerManagerView
 import tornadofx.*
 
 class RegularMenuView : Fragment() {
@@ -24,7 +25,13 @@ class RegularMenuView : Fragment() {
                 tooltip("The application will continue running in the background and the UI will be hidden.")
             }
         }
-        menu("Management")
+        menu("Management") {
+            item("Server Manager") {
+                action {
+                    find<ServerManagerView>().openWindow()
+                }
+            }
+        }
         menu("Help") {
             item("About") {
                 action {
