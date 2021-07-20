@@ -19,7 +19,7 @@ import com.sandpolis.core.instance.init.InstanceLoadPlugins;
 
 public final class Main extends Entrypoint {
 	private Main(String[] args) {
-		super(Main.class, InstanceType.CLIENT, InstanceFlavor.LIFEGEM);
+		super(Main.class, InstanceType.CLIENT, InstanceFlavor.CLIENT_LIFEGEM);
 
 		register(new InstanceLoadEnvironment());
 		register(new LifegemLoadStores());
