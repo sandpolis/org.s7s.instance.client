@@ -9,11 +9,8 @@
 //============================================================================//
 package com.sandpolis.client.lifegem.ui.common;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.MissingResourceException;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -21,15 +18,13 @@ import java.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.eventbus.EventBus;
-import com.sandpolis.client.lifegem.ui.common.controller.AbstractController;
 import com.sandpolis.core.instance.state.oid.Oid;
 import com.sandpolis.core.instance.state.st.STAttribute;
 import com.sandpolis.core.instance.state.st.STDocument;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
+import javafx.collections.transformation.FilteredList;
 
 /**
  * Miscellaneous JavaFX utilities.
@@ -89,53 +84,6 @@ public final class FxUtil {
 		return bundle.getString(key);
 	}
 
-	/**
-	 * Load a FXML resource.
-	 *
-	 * @param location The absolute location of a FXML resource
-	 * @param parent   The parent controller
-	 * @return The object hierarchy from the FXML
-	 * @throws IOException If the requested resource is not found
-	 */
-	public static <E> E load(String location, AbstractController parent) throws IOException {
-		Objects.requireNonNull(location);
-		Objects.requireNonNull(parent);
-
-		FXMLLoader loader = new FXMLLoader(FxUtil.class.getResource(location), bundle);
-		E node = loader.load();
-
-		AbstractController controller = loader.getController();
-		if (controller != null)
-			if (parent.getBus() == null)
-				parent.register(controller);
-			else
-				controller.setBus(parent.getBus());
-
-		return node;
-	}
-
-	/**
-	 * Load a root FXML resource.
-	 *
-	 * @param location   The absolute location of a FXML resource
-	 * @param parameters A list of parameters that will be posted to the
-	 *                   controller's {@link EventBus}
-	 * @return The object hierarchy from the FXML
-	 * @throws IOException If the requested resource is not found
-	 */
-	public static <E> E loadRoot(String location, Object... parameters) throws IOException {
-		Objects.requireNonNull(location);
-
-		FXMLLoader loader = new FXMLLoader(FxUtil.class.getResource(location), bundle);
-		E node = loader.load();
-
-		AbstractController controller = loader.getController();
-		controller.setBus(new EventBus());
-
-		Arrays.stream(parameters).forEach(controller.getBus()::post);
-		return node;
-	}
-
 	public static <T> ObservableValue<T> newProperty(STAttribute attribute) {
 		return new ObservableSTAttribute<>(attribute);
 	}
@@ -145,11 +93,11 @@ public final class FxUtil {
 	}
 
 	public static ObservableList<STDocument> newObservable(Oid oid) {
-		return newObservable(oid, d -> true);
+		return new ObservableSTDocument(oid.get());
 	}
 
-	public static ObservableList<STDocument> newObservable(Oid oid, Predicate<STDocument> filter) {
-		return new ObservableSTDocument(oid.get(), filter);
+	public static FilteredList<STDocument> newObservable(Oid oid, Predicate<STDocument> filter) {
+		return new FilteredList<>(newObservable(oid), filter);
 	}
 
 	private FxUtil() {

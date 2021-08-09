@@ -14,24 +14,11 @@ import com.sandpolis.core.instance.state.st.STDocument
 import com.sandpolis.client.lifegem.api.AgentView
 import tornadofx.*
 
-class InventoryView : AgentView("Inventory") {
+class BootagentView : AgentView("Boot Agent") {
 
-    override val root = squeezebox {
-        fold("Metadata") {
-            form {
-                fieldset {
-                    field("First contact") {
-                        label()
-                    }
-                    field("Last contact") {
-                        label()
-                    }
-                }
-            }
+    override val root = vbox {
+        titledpane("Boot Agent") {
         }
-        fold("Settings") {}
-
-        fold("Plugins") {}
     }
 
     override fun setActive(profile: STDocument) {

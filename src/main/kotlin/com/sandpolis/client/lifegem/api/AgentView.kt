@@ -8,37 +8,14 @@
 //                                                                            //
 //============================================================================//
 
-package com.sandpolis.client.lifegem.ui.agent_manager
+package com.sandpolis.client.lifegem.api
 
 import com.sandpolis.core.instance.state.st.STDocument
-import com.sandpolis.client.lifegem.api.AgentView
 import tornadofx.*
 
-class InventoryView : AgentView("Inventory") {
+abstract class AgentView(val name: String) : View() {
 
-    override val root = squeezebox {
-        fold("Metadata") {
-            form {
-                fieldset {
-                    field("First contact") {
-                        label()
-                    }
-                    field("Last contact") {
-                        label()
-                    }
-                }
-            }
-        }
-        fold("Settings") {}
+	abstract fun setActive(profile: STDocument)
 
-        fold("Plugins") {}
-    }
-
-    override fun setActive(profile: STDocument) {
-
-    }
-
-    override fun setInactive() {
-        
-    }
+	abstract fun setInactive()
 }

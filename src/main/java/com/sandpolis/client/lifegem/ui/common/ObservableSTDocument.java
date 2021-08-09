@@ -11,7 +11,6 @@ package com.sandpolis.client.lifegem.ui.common;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 import com.google.common.eventbus.Subscribe;
 import com.sandpolis.core.instance.state.st.STDocument;
@@ -23,12 +22,10 @@ import javafx.collections.ModifiableObservableListBase;
 public class ObservableSTDocument extends ModifiableObservableListBase<STDocument> {
 
 	private final STDocument document;
-	private final Predicate<STDocument> filter;
 	private final List<STDocument> backing;
 
-	public ObservableSTDocument(STDocument document, Predicate<STDocument> filter) {
+	public ObservableSTDocument(STDocument document) {
 		this.document = document;
-		this.filter = filter;
 		this.backing = new ArrayList<>();
 
 		document.addListener(this);
@@ -37,7 +34,7 @@ public class ObservableSTDocument extends ModifiableObservableListBase<STDocumen
 	@Subscribe
 	public void onDocumentAdded(DocumentAddedEvent event) {
 
-		if (document.oid().equals(event.document().oid()) && filter.test(event.newDocument())) {
+		if (document.oid().equals(event.document().oid())) {
 			add(event.newDocument());
 		}
 	}

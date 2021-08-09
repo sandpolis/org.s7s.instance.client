@@ -10,10 +10,15 @@
 
 package com.sandpolis.client.lifegem.ui.agent_manager
 
-import com.sandpolis.client.lifegem.ui.common.pane.ExtendPane
+import com.sandpolis.client.lifegem.api.AgentView
+import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
+import com.sandpolis.core.foundation.Platform
+import com.sandpolis.core.instance.state.AgentOid
 import com.sandpolis.core.instance.state.st.STDocument
 import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Pos
+import javafx.geometry.Side
+import javafx.scene.control.TreeItem
 import javafx.scene.layout.Region
 import tornadofx.*
 
@@ -21,54 +26,104 @@ class AgentManagerView : Fragment() {
 
     val profile: STDocument by param()
 
-    private val model =
-            object : ViewModel() {
-                val extendBottom = bind { SimpleObjectProperty<Region>() }
+    private val model = object : ViewModel() {
+        val extendBottom = bind { SimpleObjectProperty<Region>() }
+    }
+
+    val views = listOf(InventoryView(), BootagentView())
+
+    val carousel = CarouselPane().apply {
+        directionProperty().set(Side.TOP)
+
+        views.forEach {
+            add(it.name, it.root)
+        }
+    }
+
+    override val root = borderpane {
+        prefWidth = 800.0
+        prefHeight = 400.0
+
+        left = titledpane(profile.attribute(AgentOid.HOSTNAME).asString()) {
+            alignment = Pos.CENTER
+            isCollapsible = false
+            prefWidth = 150.0
+            style(append = true) {
+                padding = box(0.px, 5.px, 5.px, 5.px)
             }
-
-    val menuList = vbox {
-
-    }
-
-    val content: Region = borderpane {
-        center = label("center")
-    }
-
-    override val root =
-        borderpane {
-            left =
-                titledpane("Hostname") {
-                    setCollapsible(false)
-                    setPrefWidth(100.0)
-                    vbox {
-                        label("hostname")
-                        label("public ip")
-                        label("os")
+            vbox {
+                when (profile.attribute(AgentOid.OS_TYPE).asOsType()) {
+                    Platform.OsType.LINUX -> hbox {
+                        imageview("image/platform/linux.png")
+                        label("Linux")
                     }
-                    flowpane {
-                        setHgap(10.0)
-                        setVgap(10.0)
-                        setAlignment(Pos.CENTER)
-
-                        button("P") {
-                            tooltip("Poweroff the host")
-                        }
-                        button("R") {
-                            tooltip("Restart the host")
-                        }
-                        button("C") {
-                            tooltip("Establish a persistent connection to the host")
-                        }
-                        button("T") {
-                            tooltip("Terminate the persistent connection to the host")
-                        }
+                    Platform.OsType.WINDOWS -> hbox {
+                        imageview("image/platform/windows_10.png")
+                        label("Windows")
                     }
-                    vbox {
-
+                    Platform.OsType.DARWIN -> hbox {
+                        imageview("image/platform/osx.png")
+                        label("macOS")
+                    }
+                    else -> hbox {
+                        label("Unknown")
                     }
                 }
-            center = ExtendPane(content).apply {
-                regionBottomProperty().bind(model.extendBottom)
+                hbox {
+                    imageview("image/flag/US.png")
+                    vbox {
+                        label("127.0.0.1")
+                        label("United States")
+                    }
+                }
+                hbox {
+                    imageview()
+                    label("54 days")
+                }
+            }
+            flowpane {
+                hgap = 10.0
+                vgap = 10.0
+                alignment = Pos.CENTER
+
+                button("P") {
+                    tooltip("Power controls")
+                }
+                button("C") {
+                    tooltip("Connection controls")
+                }
+                button("T") {
+                    tooltip("")
+                }
+            }
+            treeview<AgentView> {
+                isShowRoot = false
+
+                root = TreeItem(object : AgentView("Root") {
+                    override val root = pane {}
+                    override fun setActive(profile: STDocument) {}
+                    override fun setInactive() {}
+                })
+
+                cellFormat {
+                    text = it.name
+                }
+
+                populate { parent ->
+                    if (parent == root) {
+                        views
+                    } else {
+                        null
+                    }
+                }
+
+                onUserSelect {
+                    views.forEach(AgentView::setInactive)
+                    it.setActive(profile)
+                    carousel.moveTo(it.name)
+                }
             }
         }
+        center = carousel
+    }
 }

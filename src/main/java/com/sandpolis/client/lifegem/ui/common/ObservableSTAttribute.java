@@ -37,7 +37,12 @@ public class ObservableSTAttribute<T> extends SimpleObjectProperty<T> {
 
 	@Subscribe
 	public void onAttributeChange(ChangeEvent event) {
-		set((T) event.newValue().value());
+		var value = event.newValue();
+		if (value == null) {
+			set(null);
+		} else {
+			set((T) value.value());
+		}
 	}
 
 	@Override

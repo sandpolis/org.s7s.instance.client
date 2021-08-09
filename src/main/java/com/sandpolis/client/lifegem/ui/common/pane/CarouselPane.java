@@ -18,6 +18,7 @@ import javafx.animation.Animation.Status;
 import javafx.animation.Transition;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
@@ -114,8 +115,7 @@ public class CarouselPane extends StackPane {
 	 * @param nodes Nodes in the carousel
 	 */
 	public CarouselPane(Node... nodes) {
-		Arrays.stream(nodes).forEach(views::add);
-		getChildren().add(views.get(0));
+		Arrays.stream(nodes).forEach(this::add);
 
 		current.addListener((p, o, n) -> {
 			int currentView = (Integer) o;
@@ -182,6 +182,9 @@ public class CarouselPane extends StackPane {
 	 * @param node The node to add
 	 */
 	public void add(Node node) {
+		if (views.size() == 0) {
+			getChildren().add(node);
+		}
 		views.add(node);
 	}
 
@@ -194,6 +197,10 @@ public class CarouselPane extends StackPane {
 	public void add(String name, Node node) {
 		node.setUserData(name);
 		add(node);
+	}
+
+	public ReadOnlyIntegerProperty currentIndexProperty() {
+		return current;
 	}
 
 	public ObjectProperty<Side> directionProperty() {

@@ -10,12 +10,12 @@
 
 package com.sandpolis.client.lifegem.ui.main
 
+import com.sandpolis.client.lifegem.ui.agent_manager.AgentManagerView
 import com.sandpolis.client.lifegem.ui.common.FxUtil
 import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
 import com.sandpolis.client.lifegem.ui.common.pane.ExtendPane
 import com.sandpolis.client.lifegem.ui.Events.MainMenuOpenEvent
 import com.sandpolis.client.lifegem.ui.Events.MainViewChangeEvent
-import javafx.geometry.Side
 import com.sandpolis.core.foundation.Platform
 import com.sandpolis.core.instance.Metatypes
 import com.sandpolis.core.instance.state.ConnectionOid
@@ -27,18 +27,16 @@ import com.sandpolis.core.instance.state.st.STDocument
 import com.sandpolis.core.net.connection.ConnectionStore
 import com.sandpolis.core.net.network.NetworkStore
 import com.sandpolis.core.net.state.STCmd
-import javafx.scene.image.ImageView
+import javafx.geometry.Side
 import javafx.scene.layout.Pane
-import javafx.scene.control.TitledPane
-import javafx.scene.paint.Color
 import tornadofx.*
 
 class MainView : View("Main") {
 
-    val profiles = FxUtil.newObservable(InstanceOid.InstanceOid().profile) {
+    val profiles = FxUtil.newObservable(InstanceOid.InstanceOid().profile) /*{
         val attr = it.attribute(ProfileOid.INSTANCE_TYPE)
         attr.isPresent() && attr.asInstanceType() == Metatypes.InstanceType.AGENT;
-    }
+    }*/
 
     val hostGraph = pane {
 
@@ -48,6 +46,9 @@ class MainView : View("Main") {
 
         column<STDocument, String>("Hostname") {
             FxUtil.newProperty(it.value.attribute(AgentOid.HOSTNAME))
+        }
+        column<STDocument, String>("Instance Type") {
+            FxUtil.newProperty(it.value.attribute(ProfileOid.INSTANCE_TYPE))
         }
         column<STDocument, Pane>("OS Type") {
             FxUtil.newProperty(it.value.attribute(AgentOid.OS_TYPE)) { value ->
@@ -108,6 +109,12 @@ class MainView : View("Main") {
         expander.isVisible = false
         selectionModel.selectedItemProperty().onChange {
             expander.getExpandedProperty(it).set(true)
+        }
+
+        contextmenu {
+            item("Control Panel").action {
+                find<AgentManagerView>(mapOf(AgentManagerView::profile to selectedItem)).openWindow()
+            }
         }
     }
 
