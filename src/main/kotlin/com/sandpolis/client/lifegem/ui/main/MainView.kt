@@ -10,22 +10,17 @@
 
 package com.sandpolis.client.lifegem.ui.main
 
+import com.sandpolis.client.lifegem.ui.Events.MainMenuOpenEvent
+import com.sandpolis.client.lifegem.ui.Events.MainViewChangeEvent
 import com.sandpolis.client.lifegem.ui.agent_manager.AgentManagerView
 import com.sandpolis.client.lifegem.ui.common.FxUtil
 import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
 import com.sandpolis.client.lifegem.ui.common.pane.ExtendPane
-import com.sandpolis.client.lifegem.ui.Events.MainMenuOpenEvent
-import com.sandpolis.client.lifegem.ui.Events.MainViewChangeEvent
 import com.sandpolis.core.foundation.Platform
-import com.sandpolis.core.instance.Metatypes
-import com.sandpolis.core.instance.state.ConnectionOid
-import com.sandpolis.core.instance.state.InstanceOid
-import com.sandpolis.core.instance.state.ProfileOid
-import com.sandpolis.core.instance.state.AgentOid
-import com.sandpolis.core.instance.state.STStore
+import com.sandpolis.core.instance.state.InstanceOids.ProfileOid.AgentOid
+import com.sandpolis.core.instance.state.InstanceOids.InstanceOids
+import com.sandpolis.core.instance.state.InstanceOids.ProfileOid
 import com.sandpolis.core.instance.state.st.STDocument
-import com.sandpolis.core.net.connection.ConnectionStore
-import com.sandpolis.core.net.network.NetworkStore
 import com.sandpolis.core.net.state.STCmd
 import javafx.geometry.Side
 import javafx.scene.layout.Pane
@@ -33,7 +28,7 @@ import tornadofx.*
 
 class MainView : View("Main") {
 
-    val profiles = FxUtil.newObservable(InstanceOid.InstanceOid().profile) /*{
+    val profiles = FxUtil.newObservable(InstanceOids().profile) /*{
         val attr = it.attribute(ProfileOid.INSTANCE_TYPE)
         attr.isPresent() && attr.asInstanceType() == Metatypes.InstanceType.AGENT;
     }*/
@@ -123,13 +118,13 @@ class MainView : View("Main") {
     }
 
     val extend = ExtendPane(carousel).apply {
-        
+
     }
 
     override val root = borderpane {
         if ("" == "") {
             center = extend
-            center.setViewOrder(2.0)
+            center.viewOrder = 2.0
             left<SideMenuView>()
         } else {
             center = carousel
@@ -138,13 +133,7 @@ class MainView : View("Main") {
     }
 
     override fun onDock() {
-        val preferredServer = NetworkStore.NetworkStore.preferredServer
-
-        preferredServer.flatMap {
-            ConnectionStore.ConnectionStore.getByCvid(it)
-        }.ifPresent {
-            STCmd.async().target(it).sync(InstanceOid.InstanceOid().profile)
-        }
+        STCmd.async().sync(InstanceOids().profile)
     }
 
     override fun onUndock() {

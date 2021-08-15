@@ -12,9 +12,16 @@ package com.sandpolis.client.lifegem.ui.agent_manager
 
 import com.sandpolis.core.instance.state.st.STDocument
 import com.sandpolis.client.lifegem.api.AgentView
+import com.sandpolis.core.instance.state.InstanceOids.InstanceOids
+import com.sandpolis.core.instance.state.InstanceOids.ProfileOid
+import com.sandpolis.core.net.state.STCmd
+import com.sandpolis.core.net.state.st.entangled.EntangledDocument
 import tornadofx.*
+import java.util.concurrent.CompletionStage
 
-class BootagentView : AgentView("Boot Agent") {
+class BootagentView(val profile: STDocument) : AgentView("Boot Agent") {
+
+    var entangled: CompletionStage<EntangledDocument>? = null
 
     override val root = vbox {
         titledpane("Boot Agent") {
@@ -22,10 +29,10 @@ class BootagentView : AgentView("Boot Agent") {
     }
 
     override fun setActive(profile: STDocument) {
-
+        entangled = STCmd.async().sync(InstanceOids().profile(profile.attribute(ProfileOid.UUID).asString()).bootagent.gptpartition)
     }
 
     override fun setInactive() {
-        
+        entangled?.thenApply { it.close() }
     }
 }

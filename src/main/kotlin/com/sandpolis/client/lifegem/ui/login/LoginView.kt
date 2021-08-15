@@ -18,7 +18,7 @@ import com.sandpolis.core.foundation.util.ValidationUtil
 import com.sandpolis.core.instance.state.st.STDocument
 import com.sandpolis.core.net.connection.Connection
 import com.sandpolis.core.net.connection.ConnectionStore.ConnectionStore
-import com.sandpolis.core.instance.state.ConnectionOid
+import com.sandpolis.core.instance.state.InstanceOids.ConnectionOid
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.animation.Timeline

@@ -13,7 +13,7 @@ package com.sandpolis.client.lifegem.ui.agent_manager
 import com.sandpolis.client.lifegem.api.AgentView
 import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
 import com.sandpolis.core.foundation.Platform
-import com.sandpolis.core.instance.state.AgentOid
+import com.sandpolis.core.instance.state.InstanceOids.ProfileOid.AgentOid
 import com.sandpolis.core.instance.state.st.STDocument
 import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Pos
@@ -30,7 +30,7 @@ class AgentManagerView : Fragment() {
         val extendBottom = bind { SimpleObjectProperty<Region>() }
     }
 
-    val views = listOf(InventoryView(), BootagentView())
+    val views = listOf(InventoryView(), BootagentView(profile))
 
     val carousel = CarouselPane().apply {
         directionProperty().set(Side.TOP)

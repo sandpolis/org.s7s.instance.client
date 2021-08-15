@@ -11,7 +11,11 @@
 package com.sandpolis.client.lifegem.ui.server_manager
 
 import com.sandpolis.client.lifegem.ui.common.FxUtil
-import com.sandpolis.core.instance.state.*
+import com.sandpolis.core.instance.state.InstanceOids.InstanceOids
+import com.sandpolis.core.instance.state.InstanceOids.ProfileOid
+import com.sandpolis.core.instance.state.InstanceOids.ProfileOid.ServerOid.ListenerOid
+import com.sandpolis.core.instance.state.InstanceOids.GroupOid
+import com.sandpolis.core.instance.state.InstanceOids.UserOid
 import com.sandpolis.core.instance.state.st.STDocument
 import com.sandpolis.core.net.connection.ConnectionStore
 import com.sandpolis.core.net.network.NetworkStore
@@ -23,10 +27,10 @@ class ServerManagerView : View("Server Manager") {
 
     val controller: ServerManagerController by inject()
 
-    val servers = FxUtil.newObservable(InstanceOid.InstanceOid().profile.server)
-    val users = FxUtil.newObservable(InstanceOid.InstanceOid().user)
-    val listeners = FxUtil.newObservable(InstanceOid.InstanceOid().profile.server.listener)
-    val groups = FxUtil.newObservable(InstanceOid.InstanceOid().group)
+    val servers = FxUtil.newObservable(InstanceOids().profile.server)
+    val users = FxUtil.newObservable(InstanceOids().user)
+    val listeners = FxUtil.newObservable(InstanceOids().profile.server.listener)
+    val groups = FxUtil.newObservable(InstanceOids().group)
 
     override  val root = drawer {
         prefWidth = 800.0
@@ -114,7 +118,7 @@ class ServerManagerView : View("Server Manager") {
         preferredServer.flatMap {
             ConnectionStore.ConnectionStore.getByCvid(it)
         }.ifPresent {
-            STCmd.async().target(it).sync(InstanceOid.InstanceOid().user)
+            STCmd.async().target(it).sync(InstanceOids().user)
         }
     }
 

@@ -13,7 +13,7 @@ import java.util.Objects;
 
 import com.sandpolis.client.lifegem.ui.common.controller.AbstractController;
 import com.sandpolis.core.instance.profile.Profile;
-import com.sandpolis.core.instance.state.ProfileOid;
+import com.sandpolis.core.instance.state.InstanceOids.ProfileOid;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
