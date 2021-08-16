@@ -12,13 +12,16 @@ package com.sandpolis.client.lifegem.ui.server_manager
 
 import com.sandpolis.core.client.cmd.GroupCmd
 import com.sandpolis.core.instance.Group
+import com.sandpolis.core.instance.state.st.STDocument
+import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Orientation
+import javafx.scene.layout.Region
 import tornadofx.*
 
-class GroupCreatorView : View() {
+class GroupCreatorView(val extend: ObjectProperty<Region>) : Fragment() {
 
     private val model = object : ViewModel() {
         val groupName = bind { SimpleStringProperty() }
@@ -33,12 +36,15 @@ class GroupCreatorView : View() {
     }
 
     override val root = borderpane {
-        prefWidth = 400.0
-        prefHeight = 600.0
+        prefHeight = 400.0
+
+        style {
+            padding = box(0.px, 15.px)
+        }
 
         center = scrollpane {
             isFitToWidth = true
-            squeezebox {
+            squeezebox (multiselect = false) {
                 fold("Metadata", expanded = true) {
                     isCollapsible = false
                     form {
@@ -56,7 +62,6 @@ class GroupCreatorView : View() {
                     }
                 }
                 fold("Network", expanded = true) {
-                    isCollapsible = false
                     form {
                         fieldset(labelPosition = Orientation.VERTICAL) {
                             field("Server Address") {
@@ -156,8 +161,17 @@ class GroupCreatorView : View() {
         bottom = buttonbar {
             button("Create Group") {
                 action {
-                    val group = Group.GroupConfig.newBuilder()
-                    GroupCmd.async().create(group.build())
+                    runAsync {
+                        val group = Group.GroupConfig.newBuilder()
+                        GroupCmd.async().create(group.build()).toCompletableFuture().join()
+                    } ui {
+                        extend.set(null)
+                    }
+                }
+            }
+            button("Cancel") {
+                action {
+                    extend.set(null)
                 }
             }
         }

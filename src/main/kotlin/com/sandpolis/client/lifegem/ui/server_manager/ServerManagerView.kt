@@ -11,33 +11,73 @@
 package com.sandpolis.client.lifegem.ui.server_manager
 
 import com.sandpolis.client.lifegem.ui.common.FxUtil
-import com.sandpolis.core.instance.state.InstanceOids.InstanceOids
-import com.sandpolis.core.instance.state.InstanceOids.ProfileOid
+import com.sandpolis.client.lifegem.ui.common.pane.ExtendPane
+import com.sandpolis.core.instance.state.InstanceOids.*
 import com.sandpolis.core.instance.state.InstanceOids.ProfileOid.ServerOid.ListenerOid
-import com.sandpolis.core.instance.state.InstanceOids.GroupOid
-import com.sandpolis.core.instance.state.InstanceOids.UserOid
 import com.sandpolis.core.instance.state.st.STDocument
-import com.sandpolis.core.net.connection.ConnectionStore
-import com.sandpolis.core.net.network.NetworkStore
 import com.sandpolis.core.net.state.STCmd
-import javafx.beans.property.ReadOnlyObjectWrapper
+import javafx.beans.binding.Bindings
+import javafx.beans.property.*
+import javafx.geometry.Pos
+import javafx.scene.layout.Priority
+import javafx.scene.layout.Region
 import tornadofx.*
 
 class ServerManagerView : View("Server Manager") {
 
-    val controller: ServerManagerController by inject()
+    private val model = object : ViewModel() {
+        val groupDialogProperty = bind { SimpleObjectProperty<Region>() }
+        val selectedGroupProperty = bind { SimpleObjectProperty<STDocument>() }
+    }
 
-    val servers = FxUtil.newObservable(InstanceOids().profile.server)
-    val users = FxUtil.newObservable(InstanceOids().user)
-    val listeners = FxUtil.newObservable(InstanceOids().profile.server.listener)
-    val groups = FxUtil.newObservable(InstanceOids().group)
+    val group = titledpane (collapsible = false) {
+            graphic = hbox {
+                label("test") {
+                    hboxConstraints {
+                        hGrow = Priority.ALWAYS
+                    }
+                }
+                button("Generate") {
+                    enableWhen(Bindings.isNotNull(model.selectedGroupProperty))
+                    action {
+                        model.groupDialogProperty.set(GenerateArtifactFragment(model.groupDialogProperty).root)
+                    }
+                }
+                button("Add") {
+                    action {
+                        model.groupDialogProperty.set(GroupCreatorView(model.groupDialogProperty).root)
+                    }
+                }
+                button("Import") {
+                    action {
 
-    override  val root = drawer {
+                    }
+                }
+                button("Export") {
+                    enableWhen(Bindings.isNotNull(model.selectedGroupProperty))
+                    action {
+
+                    }
+                }
+            }
+        content = tableview(FxUtil.newObservable(InstanceOids().group)) {
+            column<STDocument, String>("Name") {
+                FxUtil.newProperty(it.value.attribute(GroupOid.NAME))
+            }
+
+            model.selectedGroupProperty.bind(selectionModel.selectedItemProperty())
+            selectionModel.selectedItemProperty().addListener { _, _, n ->
+                model.groupDialogProperty.set(GroupOperationLog(model.groupDialogProperty, n).root)
+            }
+        }
+    }
+
+    override val root = drawer {
         prefWidth = 800.0
         prefHeight = 400.0
 
         item("Servers") {
-            tableview(listeners) {
+            tableview(FxUtil.newObservable(InstanceOids().profile.server)) {
                 column<STDocument, String>("UUID") {
                     FxUtil.newProperty(it.value.attribute(ProfileOid.UUID))
                 }
@@ -52,7 +92,7 @@ class ServerManagerView : View("Server Manager") {
                         }
                     }
                 center =
-                    tableview(listeners) {
+                    tableview(FxUtil.newObservable(InstanceOids().profile.server.listener)) {
                         column<STDocument, String>("Bind Address") {
                             FxUtil.newProperty(it.value.attribute(ListenerOid.ADDRESS))
                         }
@@ -71,7 +111,7 @@ class ServerManagerView : View("Server Manager") {
                         }
                     }
                 center =
-                    tableview(users) {
+                    tableview(FxUtil.newObservable(InstanceOids().user)) {
                         column<STDocument, String>("Username") {
                             FxUtil.newProperty(it.value.attribute(UserOid.USERNAME))
                         }
@@ -89,37 +129,16 @@ class ServerManagerView : View("Server Manager") {
         }
         item("Agent Groups") {
             borderpane {
-                bottom =
-                    buttonbar {
-                        button("Add") {
-                            action {
-                                find<GroupCreatorView>().openWindow()
-                            }
-                        }
-
-                        button("Import") {}
-                    }
-                center =
-                    tableview(groups) {
-                        column<STDocument, String>("Name") {
-                            FxUtil.newProperty(it.value.attribute(GroupOid.NAME))
-                        }
-                        //readonlyColumn("", FxGroup::name) {
-                        //    cellFormat { graphic = button("1") }
-                        //}
-                    }
+                center = ExtendPane(group).apply {
+                    regionBottomProperty().bind(model.groupDialogProperty)
+                }
             }
         }
     }
 
     override fun onDock() {
-        val preferredServer = NetworkStore.NetworkStore.preferredServer
-
-        preferredServer.flatMap {
-            ConnectionStore.ConnectionStore.getByCvid(it)
-        }.ifPresent {
-            STCmd.async().target(it).sync(InstanceOids().user)
-        }
+        STCmd.async().sync(InstanceOids().user)
+        STCmd.async().sync(InstanceOids().group)
     }
 
     override fun onUndock() {

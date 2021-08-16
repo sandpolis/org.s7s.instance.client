@@ -15,6 +15,7 @@ import com.sandpolis.client.lifegem.ui.common.SvgUtil
 import com.sandpolis.client.lifegem.ui.Events.MainMenuOpenEvent
 import com.sandpolis.client.lifegem.ui.Events.MainViewChangeEvent
 import com.sandpolis.client.lifegem.ui.common.tray.Tray;
+import com.sandpolis.client.lifegem.ui.server_manager.ServerManagerView
 import javafx.geometry.Orientation
 import tornadofx.*
 
@@ -55,7 +56,11 @@ class SideMenuView : Fragment() {
 
                 tooltip("Show the about window")
             }
-            button("Open Documentation")
+            button("Open Documentation") {
+                action {
+                    find<ServerManagerView>().openWindow()
+                }
+            }
         }
     }
 

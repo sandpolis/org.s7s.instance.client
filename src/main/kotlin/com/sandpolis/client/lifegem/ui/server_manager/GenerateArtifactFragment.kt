@@ -10,40 +10,109 @@
 
 package com.sandpolis.client.lifegem.ui.server_manager
 
+import com.sandpolis.core.client.cmd.GroupCmd
+import com.sandpolis.core.instance.Group
 import com.sandpolis.core.instance.state.st.STDocument
+import javafx.beans.binding.Bindings
+import javafx.beans.property.ObjectProperty
+import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.scene.layout.Region
 import tornadofx.*
 
-class GenerateArtifactFragment : Fragment() {
+class GenerateArtifactFragment(val extend: ObjectProperty<Region>) : Fragment() {
 
     val group: STDocument by param()
 
     private val model = object : ViewModel() {
-        val artifactType = bind { SimpleStringProperty() }
-        val artifactFormat = bind { SimpleStringProperty() }
+        val kiloFormat = bind { SimpleStringProperty() }
+        val microFormat = bind { SimpleStringProperty() }
+        val nanoFormat = bind { SimpleStringProperty() }
+
+        val cardWidth = bind { SimpleDoubleProperty() }
     }
 
-    // The valid vanilla formats
-    val vanillaFormats = listOf(".jar", ".go", ".sh", ".exe", ".py").asObservable()
+    override val root = borderpane {
+        model.cardWidth.bind(Bindings.divide(widthProperty(), 3))
+        center = hbox {
+                titledpane("Cross-platform Agent", collapsible = false) {
 
-    // The valid micro formats
-    val microFormats = listOf(".elf", ".exe").asObservable()
+                    prefWidthProperty().bind(model.cardWidth)
 
-    override val root = form {
-        fieldset {
-            field("Agent executable") {
-                combobox<String>(model.artifactType) {
-                    items = listOf("Vanilla", "Micro").asObservable()
+                    label("This is the most commonly used agent because it has the most features. It runs on the JVM, so it's the most resource intensive out of the options.") {
+                        isWrapText = true
+                        enableWhen(Bindings.isNotNull(model.kiloFormat))
+                    }
+                    combobox<String>(
+                        model.kiloFormat,
+                        listOf("Runnable Java Archive (.jar)", "Windows Portable Executable (.exe)")
+                    ) {
+                        value = "Runnable Java Archive (.jar)"
+                        model.kiloFormat.addListener { _, _, n ->
+                            if (n != null) {
+                                model.microFormat.set(null)
+                                model.nanoFormat.set(null)
+                            }
+                        }
+                    }
                 }
-                combobox<String>(model.artifactFormat, vanillaFormats) {
-                    model.artifactType.addListener { p, o, n ->
-                        items = vanillaFormats
+                titledpane("Native Agent", collapsible = false) {
+
+                    prefWidthProperty().bind(model.cardWidth)
+
+                    label("This agent has fewer features than the cross-platform agent, but is implemented in Rust for a significant performance improvement.") {
+                        isWrapText = true
+                        enableWhen(Bindings.isNotNull(model.microFormat))
+                    }
+                    combobox<String>(
+                        model.microFormat,
+                        listOf("Executable and Linkable Format", "Windows Portable Executable (.exe)")
+                    ) {
+                        model.microFormat.addListener { _, _, n ->
+                            if (n != null) {
+                                model.kiloFormat.set(null)
+                                model.nanoFormat.set(null)
+                            }
+                        }
+                    }
+                }
+                titledpane("Minimal Native Agent", collapsible = false) {
+
+                    prefWidthProperty().bind(model.cardWidth)
+
+                    label("This agent has the fewest features, but is extremely lightweight which makes it suitable for embedded applications.") {
+                        isWrapText = true
+                        enableWhen(Bindings.isNotNull(model.nanoFormat))
+                    }
+                    combobox<String>(
+                        model.nanoFormat,
+                        listOf("Executable and Linkable Format", "Windows Portable Executable (.exe)")
+                    ) {
+                        model.nanoFormat.addListener { _, _, n ->
+                            if (n != null) {
+                                model.kiloFormat.set(null)
+                                model.microFormat.set(null)
+                            }
+                        }
+                    }
+                }
+        }
+        bottom = buttonbar {
+            button("Generate") {
+                action {
+                    runAsync {
+                        val group = Group.GroupConfig.newBuilder()
+                        GroupCmd.async().create(group.build()).toCompletableFuture().join()
+                    } ui {
+                        extend.set(null)
                     }
                 }
             }
-        }
-        buttonbar {
-            button("Generate")
+            button("Cancel") {
+                action {
+                    extend.set(null)
+                }
+            }
         }
     }
 }
