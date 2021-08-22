@@ -23,6 +23,7 @@ import com.sandpolis.core.instance.state.InstanceOids.ProfileOid
 import com.sandpolis.core.instance.state.st.STDocument
 import com.sandpolis.core.net.state.STCmd
 import javafx.geometry.Side
+import javafx.scene.control.TableView
 import javafx.scene.layout.Pane
 import tornadofx.*
 
@@ -38,6 +39,8 @@ class MainView : View("Main") {
     }
 
     val hostList = tableview(profiles) {
+
+        columnResizePolicy = TableView.CONSTRAINED_RESIZE_POLICY
 
         column<STDocument, String>("Hostname") {
             FxUtil.newProperty(it.value.attribute(AgentOid.HOSTNAME))

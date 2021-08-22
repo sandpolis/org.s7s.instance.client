@@ -10,349 +10,36 @@
 
 package com.sandpolis.client.lifegem.ui.login
 
-import com.sandpolis.core.instance.state.InstanceOids.InstanceOids;
 import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
 import com.sandpolis.client.lifegem.ui.main.MainView
-import com.sandpolis.core.client.cmd.LoginCmd
-import com.sandpolis.core.client.cmd.ServerCmd
-import com.sandpolis.core.foundation.util.ValidationUtil
-import com.sandpolis.core.instance.state.InstanceOids.ConnectionOid
 import com.sandpolis.core.instance.state.st.STDocument
 import com.sandpolis.core.net.connection.Connection
-import com.sandpolis.core.net.connection.ConnectionStore.ConnectionStore
-import com.sandpolis.core.net.state.STCmd
-import javafx.animation.KeyFrame
-import javafx.animation.KeyValue
-import javafx.animation.Timeline
 import javafx.beans.property.*
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import javafx.geometry.Orientation
 import javafx.scene.image.Image
-import javafx.scene.paint.Color
-import javafx.scene.paint.Paint
-import javafx.util.Duration
 import tornadofx.*
-import java.util.*
-import kotlin.concurrent.timer
 
 class LoginView : View("Login") {
 
-    val controller: LoginController by inject()
-
-    /**
-     * The amount of time to wait between pings in milliseconds.
-     */
-    private val PING_PERIOD: Long = 1500
-
-    private enum class LoginPhase {
+    enum class LoginPhase {
         SERVER_SELECT, DIRECT_USER_SELECT, CLOUD_SERVER_SELECT, DIRECT_PLUGIN_SELECT, COMPLETE
     }
 
-    private val model = object : ViewModel() {
+    class LoginViewModel : ViewModel() {
         val loginPhase = bind { SimpleObjectProperty<LoginPhase>() }
         val bannerImage = bind { SimpleObjectProperty<Image>() }
+        val bannerVersion = bind { SimpleStringProperty() }
+        val serverAddress = bind { SimpleStringProperty() }
+        val serverCertStatus = bind { SimpleStringProperty() }
         lateinit var connection: Connection
+
+        val plugins: ObservableList<STDocument> = FXCollections.observableArrayList()
 
         // Whether a connection or login attempt is currently pending
         val pending = bind { SimpleBooleanProperty() }
     }
-
-    private val directLoginModel = object : ViewModel() {
-        val address = bind { SimpleStringProperty() }
-        val status = bind { SimpleStringProperty() }
-        val status_color = bind { SimpleObjectProperty<Paint>(Color.BLACK) }
-    }
-
-    private val cloudLoginModel = object : ViewModel() {
-        val username = bind { SimpleStringProperty() }
-        val password = bind { SimpleStringProperty() }
-        val token = bind { SimpleStringProperty() }
-    }
-
-    private val directUserSelectModel = object : ViewModel() {
-        val address = bind { SimpleStringProperty() }
-        val latency_timer = bind { SimpleObjectProperty<Timer>() }
-        val latency_visual = bind { SimpleDoubleProperty() }
-        val latency = bind { SimpleStringProperty() }
-        val version = bind { SimpleStringProperty() }
-        val username = bind { SimpleStringProperty() }
-        val password = bind { SimpleStringProperty() }
-        val token = bind { SimpleStringProperty() }
-        val status = bind { SimpleStringProperty() }
-        val status_color = bind { SimpleObjectProperty<Paint>(Color.BLACK) }
-    }
-
-    /**
-     * Scale the ping approximation so it's easier for the user to distinguish
-     * between small pings and large pings.
-     *
-     * @param ping The last ping value
-     * @return A duration representative of the given ping value
-     */
-    private fun calculatePingVisual(ping: Long): Duration {
-        return Duration.millis(java.lang.Math.min(PING_PERIOD, 4 * ping + 80).toDouble())
-    }
-
-    val serverSelection = squeezebox(multiselect = false) {
-        fold("Direct Login", expanded = true) {
-            collapsibleProperty().bind(model.pending.not())
-            form {
-                fieldset(labelPosition = Orientation.VERTICAL) {
-                    field("Server Address") {
-                        textfield(directLoginModel.address) {
-                            disableProperty().bind(model.pending)
-                            required()
-                            validator {
-                                if (text != null) {
-                                    val index = text.lastIndexOf(":")
-                                    if (index == -1) {
-                                        if (!ValidationUtil.address(text)) {
-                                            error("Invalid DNS name or IP address")
-                                        } else {
-                                            null
-                                        }
-                                    } else {
-                                        if (!ValidationUtil.address(text.substring(0, index))) {
-                                            error("Invalid DNS name or IP address")
-                                        } else if (!ValidationUtil.port(text.substring(index + 1))) {
-                                            error("Invalid port")
-                                        } else {
-                                            null
-                                        }
-                                    }
-                                } else {
-                                    null
-                                }
-                            }
-                            filterInput { change ->
-                                !change.isAdded ||
-                                        change.controlNewText.matches("^[A-Za-z0-9\\.\\-:]*$".toRegex())
-                            }
-                        }
-                    }
-                }
-            }
-            buttonbar {
-                label(directLoginModel.status) {
-                    textFillProperty().bind(directLoginModel.status_color)
-                }
-                button("Connect") {
-                    disableProperty().bind(model.pending)
-                    action {
-                        directLoginModel.commit {
-                            model.pending.set(true)
-                            val index = directLoginModel.address.get().lastIndexOf(":")
-                            val address = if (index != -1) directLoginModel.address.get()
-                                .substring(0, index) else directLoginModel.address.get()
-                            val port =
-                                if (index != -1) directLoginModel.address.get().substring(index + 1).toInt() else 8768
-
-                            directLoginModel.status.set("Attempting connection to: " + address)
-
-                            runAsync {
-                                ConnectionStore.connect(address, port).await()
-                            } ui {
-                                if (it.isSuccess) {
-                                    model.connection = it.get()
-                                    directLoginModel.status.set("Downloading server metadata")
-                                    runAsync {
-                                        ServerCmd.async().target(it.get()).banner.toCompletableFuture().join()
-                                    } ui {
-                                        directLoginModel.status.set("")
-
-                                        // Set banner information
-                                        directUserSelectModel.version.set(it.version)
-                                        directUserSelectModel.address.set(
-                                            model.connection.get(ConnectionOid.REMOTE_ADDRESS).asString()
-                                        )
-
-                                        // Advance the phase
-                                        model.loginPhase.set(LoginPhase.DIRECT_USER_SELECT)
-                                        model.pending.set(false)
-                                    }
-                                } else {
-                                    directLoginModel.status.set("Failed to connect to specified server")
-                                    model.pending.set(false)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        fold("Cloud Login") {
-            collapsibleProperty().bind(model.pending.not())
-            form {
-                fieldset(labelPosition = Orientation.VERTICAL) {
-                    field("Username") {
-                        textfield(cloudLoginModel.username) {
-                            disableProperty().bind(model.pending)
-                            required()
-                        }
-                    }
-                    hbox(10) {
-                        field("Password") {
-                            passwordfield(cloudLoginModel.password) {
-                                disableProperty().bind(model.pending)
-                                required()
-                            }
-                        }
-                        field("2FA Token") {
-                            textfield(cloudLoginModel.token) {
-                                required()
-                                prefColumnCountProperty().set(6)
-                                filterInput { change ->
-                                    !change.isAdded ||
-                                            change.controlNewText.let {
-                                                it.matches("^[0-9]*$".toRegex()) && it.length <= 6
-                                            }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            buttonbar {
-                button("Login") {
-                    disableProperty().bind(model.pending)
-                }
-            }
-        }
-        fold("Skip Login") {
-            collapsibleProperty().bind(model.pending.not())
-            text(
-                "It's possible to continue without logging in, but most functionality will be unavailable"
-            )
-            buttonbar {
-                button("Continue without server") {
-                    action {
-                        replaceWith(MainView::class, transition = ViewTransition.FadeThrough(1.seconds))
-                    }
-                }
-            }
-        }
-    }
-
-    init {
-        model.loginPhase.addListener { _, _, n ->
-            if (n == LoginPhase.DIRECT_USER_SELECT) {
-                directUserSelectModel.latency_timer.set(timer(daemon = true, period = 1000) {
-                    runAsync {
-                        ServerCmd.async().target(model.connection).ping().toCompletableFuture().join()
-                    } ui {
-                        // Run the indicator animation
-                        directUserSelectModel.latency_visual.set(0.0)
-                        directUserSelectModel.latency.set("${it} ms")
-                        Timeline(
-                            KeyFrame(
-                                calculatePingVisual(it),
-                                KeyValue(directUserSelectModel.latency_visual, 1.0)
-                            )
-                        ).play()
-                    }
-                })
-            } else {
-                // Cancel the timer
-                if (directUserSelectModel.latency_timer.get() != null) {
-                    directUserSelectModel.latency_timer.get().cancel()
-                }
-            }
-        }
-    }
-
-    val userSelection = squeezebox(fillHeight = false) {
-        fold("Server Information", expanded = true) {
-            isCollapsible = false
-            form {
-                fieldset {
-                    field("Address") { label(directUserSelectModel.address) }
-                    field("Version") { label(directUserSelectModel.version) }
-                    field("Certificate") { label("7.0.0") }
-                    field("Latency") {
-                        hbox(10) {
-                            progressindicator {
-                                progressProperty().bind(directUserSelectModel.latency_visual)
-                            }
-                            label(directUserSelectModel.latency)
-                        }
-                    }
-                }
-            }
-        }
-        fold("User Credentials", expanded = true) {
-            isCollapsible = false
-            form {
-                fieldset(labelPosition = Orientation.VERTICAL) {
-                    hbox(10) {
-                        field("Username") {
-                            textfield(directUserSelectModel.username) {
-                                //required()
-                            }
-                        }
-                        field("Password") {
-                            passwordfield(directUserSelectModel.password) {
-                                //required()
-                            }
-                        }
-                        field("2FA Token") {
-                            textfield(directUserSelectModel.token) {
-                                //required()
-                                prefColumnCountProperty().set(6)
-                                filterInput { change ->
-                                    !change.isAdded ||
-                                            change.controlNewText.let {
-                                                it.matches("^[0-9]*$".toRegex()) && it.length <= 6
-                                            }
-                                }
-                            }
-                        }
-                    }
-                }
-                buttonbar {
-                    label(directUserSelectModel.status)
-                    button("Login") {
-                        action {
-                            directUserSelectModel.status.set("Attempting login")
-                            directUserSelectModel.status_color.set(Color.BLACK)
-                            runAsync {
-                                LoginCmd.async().target(model.connection)
-                                    .login(directUserSelectModel.username.get(), directUserSelectModel.password.get())
-                                    .toCompletableFuture().join()
-                            } ui {
-                                if (it.result) {
-                                    directUserSelectModel.status.set("Loading plugins")
-                                    runAsync {
-                                        STCmd.async().target(model.connection).snapshot(InstanceOids().profile(model.connection.getRemoteUuid()).plugin).toCompletableFuture().join()
-                                    } ui {
-                                        directUserSelectModel.status.set("")
-                                        model.loginPhase.set(LoginPhase.COMPLETE)
-                                    }
-                                } else {
-                                    model.pending.set(false)
-                                    directUserSelectModel.status.set("Login failed")
-                                    directUserSelectModel.status_color.set(Color.RED)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    val plugins: ObservableList<STDocument> = FXCollections.observableArrayList()
-
-    val pluginSelection = borderpane {
-        center = tableview(plugins) {
-            column<STDocument, String>("Name") {
-                ReadOnlyObjectWrapper("")
-            }
-            column<STDocument, String>("Identifier") {
-                ReadOnlyObjectWrapper("")
-            }
-        }
-    }
+    val model = LoginViewModel()
 
     override val root = borderpane {
         top = borderpane {
@@ -361,9 +48,9 @@ class LoginView : View("Login") {
             }
             center = imageview(resources["/image/sandpolis-640.png"])
         }
-        center = CarouselPane(serverSelection).apply {
-            add(LoginPhase.DIRECT_USER_SELECT.name, userSelection)
-            add(LoginPhase.DIRECT_PLUGIN_SELECT.name, pluginSelection)
+        center = CarouselPane(ServerSelect(this@LoginView).root).apply {
+            add(LoginPhase.DIRECT_USER_SELECT.name, UserSelect(this@LoginView).root)
+            add(LoginPhase.DIRECT_PLUGIN_SELECT.name, PluginSelect(this@LoginView).root)
             model.loginPhase.addListener { _, _, n ->
                 if (n == LoginPhase.COMPLETE) {
                     replaceWith(MainView::class, transition = ViewTransition.FadeThrough(1.seconds))
