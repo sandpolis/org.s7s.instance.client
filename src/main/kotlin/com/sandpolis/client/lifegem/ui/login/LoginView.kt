@@ -10,6 +10,7 @@
 
 package com.sandpolis.client.lifegem.ui.login
 
+import com.sandpolis.core.instance.state.InstanceOids.InstanceOids;
 import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
 import com.sandpolis.client.lifegem.ui.main.MainView
 import com.sandpolis.core.client.cmd.LoginCmd
@@ -19,6 +20,7 @@ import com.sandpolis.core.instance.state.InstanceOids.ConnectionOid
 import com.sandpolis.core.instance.state.st.STDocument
 import com.sandpolis.core.net.connection.Connection
 import com.sandpolis.core.net.connection.ConnectionStore.ConnectionStore
+import com.sandpolis.core.net.state.STCmd
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.animation.Timeline
@@ -321,7 +323,7 @@ class LoginView : View("Login") {
                                 if (it.result) {
                                     directUserSelectModel.status.set("Loading plugins")
                                     runAsync {
-                                        //STCmd.async().target(model.connection).snapshot(InstanceOid.InstanceOid().profile(model.connection.getRemoteUuid()).plugin).toCompletableFuture().join()
+                                        STCmd.async().target(model.connection).snapshot(InstanceOids().profile(model.connection.getRemoteUuid()).plugin).toCompletableFuture().join()
                                     } ui {
                                         directUserSelectModel.status.set("")
                                         model.loginPhase.set(LoginPhase.COMPLETE)

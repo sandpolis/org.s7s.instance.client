@@ -10,9 +10,10 @@
 
 package com.sandpolis.client.lifegem.ui.agent_manager
 
-import com.sandpolis.client.lifegem.api.AgentView
+import com.sandpolis.client.lifegem.plugin.AgentViewExtension
 import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
 import com.sandpolis.core.foundation.Platform
+import com.sandpolis.core.instance.plugin.PluginStore
 import com.sandpolis.core.instance.state.InstanceOids.ProfileOid.AgentOid
 import com.sandpolis.core.instance.state.st.STDocument
 import javafx.beans.property.SimpleObjectProperty
@@ -30,12 +31,18 @@ class AgentManagerView : Fragment() {
         val extendBottom = bind { SimpleObjectProperty<Region>() }
     }
 
-    val views = listOf(InventoryView(), BootagentView(profile))
+    val views = listOf(InventoryView(), BootagentView())
+
+    val pluginViews = PluginStore.PluginStore.getHandles(AgentViewExtension::class.java).toList()
 
     val carousel = CarouselPane().apply {
         directionProperty().set(Side.TOP)
 
         views.forEach {
+            add(it.name, it.root)
+        }
+
+        pluginViews.forEach {
             add(it.name, it.root)
         }
     }
@@ -49,7 +56,7 @@ class AgentManagerView : Fragment() {
             isCollapsible = false
             prefWidth = 150.0
             style(append = true) {
-                padding = box(0.px, 5.px, 5.px, 5.px)
+                padding = box(5.px)
             }
             vbox {
                 when (profile.attribute(AgentOid.OS_TYPE).asOsType()) {
@@ -96,13 +103,13 @@ class AgentManagerView : Fragment() {
                     tooltip("")
                 }
             }
-            treeview<AgentView> {
+            treeview<AgentViewExtension> {
                 isShowRoot = false
 
-                root = TreeItem(object : AgentView("Root") {
+                root = TreeItem(object : AgentViewExtension("Root") {
                     override val root = pane {}
-                    override fun setActive(profile: STDocument) {}
-                    override fun setInactive() {}
+                    override fun nowVisible(profile: STDocument) {}
+                    override fun nowInvisible() {}
                 })
 
                 cellFormat {
@@ -111,15 +118,15 @@ class AgentManagerView : Fragment() {
 
                 populate { parent ->
                     if (parent == root) {
-                        views
+                        listOf(views, pluginViews).flatten()
                     } else {
                         null
                     }
                 }
 
                 onUserSelect {
-                    views.forEach(AgentView::setInactive)
-                    it.setActive(profile)
+                    views.forEach(AgentViewExtension::nowInvisible)
+                    it.nowVisible(profile)
                     carousel.moveTo(it.name)
                 }
             }

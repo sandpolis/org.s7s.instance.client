@@ -11,10 +11,10 @@
 package com.sandpolis.client.lifegem.ui.agent_manager
 
 import com.sandpolis.core.instance.state.st.STDocument
-import com.sandpolis.client.lifegem.api.AgentView
+import com.sandpolis.client.lifegem.plugin.AgentViewExtension
 import tornadofx.*
 
-class InventoryView : AgentView("Inventory") {
+class InventoryView : AgentViewExtension("Inventory") {
 
     override val root = squeezebox {
         fold("Metadata") {
@@ -34,11 +34,11 @@ class InventoryView : AgentView("Inventory") {
         fold("Plugins") {}
     }
 
-    override fun setActive(profile: STDocument) {
+    override fun nowVisible(profile: STDocument) {
 
     }
 
-    override fun setInactive() {
+    override fun nowInvisible() {
         
     }
 }

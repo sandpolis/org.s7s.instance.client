@@ -10,15 +10,13 @@
 
 package com.sandpolis.client.lifegem.ui.agent_manager
 
+import com.sandpolis.client.lifegem.plugin.AgentViewExtension
 import com.sandpolis.core.instance.state.st.STDocument
-import com.sandpolis.client.lifegem.api.AgentView
-import com.sandpolis.core.instance.state.InstanceOids
-import com.sandpolis.core.net.state.STCmd
 import com.sandpolis.core.net.state.st.entangled.EntangledDocument
 import tornadofx.*
 import java.util.concurrent.CompletionStage
 
-class ConnectionView : AgentView("Inventory") {
+class ConnectionView : AgentViewExtension("Inventory") {
 
     var entangled: CompletionStage<EntangledDocument>? = null
 
@@ -27,12 +25,12 @@ class ConnectionView : AgentView("Inventory") {
         }
     }
 
-    override fun setActive(profile: STDocument) {
+    override fun nowVisible(profile: STDocument) {
     //    entangled = STCmd.async().sync(
     //        InstanceOids.InstanceOids().profile(profile.attribute(InstanceOids.ProfileOid.UUID).asString()).bootagent.gptpartition)
     }
 
-    override fun setInactive() {
-    //    entangled?.thenApply { it.close() }
+    override fun nowInvisible() {
+        entangled?.thenApply { it.close() }
     }
 }

@@ -13,6 +13,7 @@ open module com.sandpolis.client.lifegem {
 	exports com.sandpolis.client.lifegem.ui.common.label;
 	exports com.sandpolis.client.lifegem.stage;
 	exports com.sandpolis.client.lifegem.init;
+	exports com.sandpolis.client.lifegem.plugin;
 	exports com.sandpolis.client.lifegem.ui.common.pane;
 	exports com.sandpolis.client.lifegem.view.main.graph;
 	exports com.sandpolis.client.lifegem.ui.common;

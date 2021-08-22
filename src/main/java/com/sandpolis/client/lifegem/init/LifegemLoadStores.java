@@ -92,7 +92,7 @@ public class LifegemLoadStores extends InitTask {
 		});
 
 		PluginStore.init(config -> {
-			config.collection = Oid.of("/profile//plugin", Entrypoint.data().uuid()).get();
+			config.collection = Oid.of("/profile/*/plugin", Entrypoint.data().uuid()).get();
 		});
 
 		return outcome.success();
