@@ -1,32 +1,23 @@
-# Gradle directories
-.gradle
-
-# Build directories
-build
-bin
-
-# Eclipse metadata
-.project
-.classpath
-.settings
-
-# IDEA metadata
-.idea
-*.iws
+**/src/gen
+**/src/main/resources/build.json
 *.iml
 *.ipr
-
-# Annotation processor
-.apt_generated
-.factorypath
-
-# Generated sources
-**/gen/main/cpp
-**/gen/main/java
-**/gen/main/swift
-**/src/main/resources/build.properties
-
-# MacOS specific
-.DS_Store
+*.iws
+*.log
+*.rs.bk
 .AppleDouble
+.apt_generated
+.classpath
+.DS_Store
+.factorypath
+.gradle
+.idea
 .LSOverride
+.project
+.settings
+.vagrant
+__pycache__
+bin
+build
+node_modules
+target

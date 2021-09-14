@@ -13,24 +13,27 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id("java-library")
 	id("sandpolis-java")
-	id("sandpolis-module")
+	id("sandpolis-instance")
 	id("sandpolis-publish")
-	id("sandpolis-soi")
 	id("org.openjfx.javafxplugin") version "0.0.10"
 	id("application")
-
-	kotlin("jvm") version "1.5.20"
 }
 
 application {
-    mainModule.set("com.sandpolis.client.lifegem")
-    mainClass.set("com.sandpolis.client.lifegem.Main")
+	mainModule.set("com.sandpolis.client.lifegem")
+	mainClass.set("com.sandpolis.client.lifegem.Main")
 }
 
 tasks.named<JavaExec>("run") {
 	environment.put("S7S_DEVELOPMENT_MODE", "true")
 	environment.put("S7S_LOG_LEVELS", "io.netty=WARN,java.util.prefs=OFF,com.sandpolis=TRACE")
-    jvmArgs = listOf("--add-opens", "javafx.graphics/javafx.scene=tornadofx")
+	jvmArgs = listOf("--add-opens", "javafx.graphics/javafx.scene=tornadofx")
+}
+
+tasks.withType<Jar>() {
+	manifest {
+		attributes["Application-Name"] = "Sandpolis"
+	}
 }
 
 repositories {
