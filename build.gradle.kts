@@ -9,13 +9,13 @@
 //============================================================================//
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.internal.os.OperatingSystem
 
 plugins {
 	id("java-library")
 	id("sandpolis-java")
 	id("sandpolis-instance")
 	id("sandpolis-publish")
-	id("org.openjfx.javafxplugin") version "0.0.10"
 	id("application")
 }
 
@@ -44,13 +44,8 @@ repositories {
 
 tasks.withType<KotlinCompile>().configureEach {
 	kotlinOptions {
-		jvmTarget = "15"
+		jvmTarget = "17"
 	}
-}
-
-javafx {
-	modules = listOf( "javafx.controls", "javafx.fxml", "javafx.graphics", "javafx.web", "javafx.swing" )
-	version = "16"
 }
 
 dependencies {
@@ -60,9 +55,6 @@ dependencies {
 	testImplementation("org.testfx:testfx-junit5:4.0.16-alpha")
 	testImplementation("org.testfx:openjfx-monocle:jdk-12.0.1+2")
 	testImplementation("org.awaitility:awaitility:4.0.1")
-
-	// https://github.com/sirolf2009/fxgraph
-	implementation("com.sirolf2009:fxgraph:0.0.3")
 
 	// https://github.com/nayuki/QR-Code-generator
 	implementation("io.nayuki:qrcodegen:1.6.0")
@@ -79,11 +71,24 @@ dependencies {
 		implementation(project(":module:com.sandpolis.core.net"))
 		implementation(project(":module:com.sandpolis.core.instance"))
 	}
-}
 
-task<Sync>("assembleLib") {
-	dependsOn(tasks.named("jar"))
-	from(configurations.runtimeClasspath)
-	from(tasks.named("jar"))
-	into("${buildDir}/lib")
+	if (OperatingSystem.current().isMacOsX()) {
+		implementation("org.openjfx:javafx-base:17:mac")
+		implementation("org.openjfx:javafx-graphics:17:mac")
+		implementation("org.openjfx:javafx-controls:17:mac")
+		implementation("org.openjfx:javafx-fxml:17:mac")
+		implementation("org.openjfx:javafx-web:17:mac")
+	} else if (OperatingSystem.current().isLinux()) {
+		implementation("org.openjfx:javafx-base:17:linux")
+		implementation("org.openjfx:javafx-graphics:17:linux")
+		implementation("org.openjfx:javafx-controls:17:linux")
+		implementation("org.openjfx:javafx-fxml:17:linux")
+		implementation("org.openjfx:javafx-web:17:linux")
+	} else if (OperatingSystem.current().isWindows()) {
+		implementation("org.openjfx:javafx-base:17:windows")
+		implementation("org.openjfx:javafx-graphics:17:windows")
+		implementation("org.openjfx:javafx-controls:17:windows")
+		implementation("org.openjfx:javafx-fxml:17:windows")
+		implementation("org.openjfx:javafx-web:17:windows")
+	}
 }

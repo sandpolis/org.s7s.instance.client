@@ -15,7 +15,6 @@ open module com.sandpolis.client.lifegem {
 	exports com.sandpolis.client.lifegem.init;
 	exports com.sandpolis.client.lifegem.plugin;
 	exports com.sandpolis.client.lifegem.ui.common.pane;
-	exports com.sandpolis.client.lifegem.view.main.graph;
 	exports com.sandpolis.client.lifegem.ui.common;
 	exports com.sandpolis.client.lifegem.ui.common.field;
 	exports com.sandpolis.client.lifegem.ui.common.controller;
@@ -29,7 +28,6 @@ open module com.sandpolis.client.lifegem {
 	requires com.sandpolis.core.net;
 	requires com.sandpolis.core.client;
 	requires com.sandpolis.core.clientserver;
-	requires fxgraph;
 	requires io.netty.common;
 	requires io.netty.transport;
 	requires java.desktop;
