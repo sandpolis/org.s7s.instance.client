@@ -13,7 +13,6 @@ import static com.sandpolis.client.lifegem.stage.StageStore.StageStore;
 
 import com.sandpolis.client.lifegem.ui.common.FxUtil;
 import com.sandpolis.core.instance.InitTask;
-import com.sandpolis.core.instance.TaskOutcome;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -63,10 +62,10 @@ public class LifegemLoadUserInterface extends InitTask {
 	}
 
 	@Override
-	public TaskOutcome run(TaskOutcome outcome) throws Exception {
+	public TaskOutcome run(TaskOutcome.Factory outcome) throws Exception {
 		new Thread(() -> Application.launch(UI.class)).start();
 
-		return outcome.success();
+		return outcome.succeeded();
 	}
 
 	@Override

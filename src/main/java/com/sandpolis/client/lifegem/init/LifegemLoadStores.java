@@ -24,7 +24,6 @@ import java.util.concurrent.Executors;
 
 import com.sandpolis.core.instance.Entrypoint;
 import com.sandpolis.core.instance.InitTask;
-import com.sandpolis.core.instance.TaskOutcome;
 import com.sandpolis.core.instance.state.oid.Oid;
 import com.sandpolis.core.instance.state.st.EphemeralDocument;
 
@@ -35,7 +34,7 @@ import javafx.application.Platform;
 public class LifegemLoadStores extends InitTask {
 
 	@Override
-	public TaskOutcome run(TaskOutcome outcome) throws Exception {
+	public TaskOutcome run(TaskOutcome.Factory outcome) throws Exception {
 		Platform.startup(() -> {
 		});
 
@@ -45,7 +44,7 @@ public class LifegemLoadStores extends InitTask {
 		});
 
 		ProfileStore.init(config -> {
-			config.collection = Oid.of("/profile").get();
+			config.collection = STStore.get(Oid.of("/profile"));
 		});
 
 		ThreadStore.init(config -> {
@@ -77,25 +76,24 @@ public class LifegemLoadStores extends InitTask {
 		});
 
 		ExeletStore.init(config -> {
-			config.exelets = List.of();
 		});
 
 		StreamStore.init(config -> {
 		});
 
 		NetworkStore.init(config -> {
-			config.collection = Oid.of("/network_connection").get();
+			config.collection = STStore.get(Oid.of("/network_connection"));
 		});
 
 		ConnectionStore.init(config -> {
-			config.collection = Oid.of("/connection").get();
+			config.collection = STStore.get(Oid.of("/connection"));
 		});
 
 		PluginStore.init(config -> {
-			config.collection = Oid.of("/profile/*/plugin", Entrypoint.data().uuid()).get();
+			config.collection = STStore.get(Oid.of("/profile/*/plugin", Entrypoint.data().uuid()));
 		});
 
-		return outcome.success();
+		return outcome.succeeded();
 	}
 
 	@Override

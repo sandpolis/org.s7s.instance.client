@@ -9,6 +9,8 @@
 //============================================================================//
 package com.sandpolis.client.lifegem.ui.common;
 
+import static com.sandpolis.core.instance.state.STStore.STStore;
+
 import java.util.Enumeration;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -93,7 +95,7 @@ public final class FxUtil {
 	}
 
 	public static ObservableList<STDocument> newObservable(Oid oid) {
-		return new ObservableSTDocument(oid.get());
+		return new ObservableSTDocument(STStore.get(oid));
 	}
 
 	public static FilteredList<STDocument> newObservable(Oid oid, Predicate<STDocument> filter) {

@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.concurrent.TimeUnit;
 
-import com.sandpolis.core.foundation.util.TextUtil;
+import com.sandpolis.core.foundation.S7SDuration;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -90,7 +90,7 @@ public class DateLabel extends Label {
 
 			updateLoop = new Timeline(new KeyFrame(refresh, (event) -> {
 				long uptime = System.currentTimeMillis() - referenceProperty.get();
-				setText(TextUtil.formatDuration(java.time.Duration.ofMillis(uptime)));
+				setText(S7SDuration.of(java.time.Duration.ofMillis(uptime)).format());
 			}));
 			updateLoop.setCycleCount(Timeline.INDEFINITE);
 			updateLoop.play();

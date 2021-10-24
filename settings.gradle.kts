@@ -9,10 +9,3 @@
 //============================================================================//
 
 rootProject.name = "com.sandpolis.client.lifegem"
-
-// Core modules
-include("module:com.sandpolis.core.client")
-include("module:com.sandpolis.core.clientagent")
-include("module:com.sandpolis.core.foundation")
-include("module:com.sandpolis.core.instance")
-include("module:com.sandpolis.core.net")
