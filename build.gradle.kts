@@ -13,10 +13,10 @@ import org.gradle.internal.os.OperatingSystem
 
 plugins {
 	id("java-library")
-	id("sandpolis-java")
-	id("sandpolis-instance")
-	id("sandpolis-publish")
 	id("application")
+	id("com.sandpolis.build.module") version "+"
+	id("com.sandpolis.build.instance") version "+"
+	id("com.sandpolis.build.publish") version "+"
 }
 
 application {
