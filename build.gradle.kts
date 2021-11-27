@@ -14,9 +14,9 @@ import org.gradle.internal.os.OperatingSystem
 plugins {
 	id("java-library")
 	id("application")
-	id("com.sandpolis.build.module") version "+"
-	id("com.sandpolis.build.instance") version "+"
-	id("com.sandpolis.build.publish") version "+"
+	id("com.sandpolis.build.module")
+	id("com.sandpolis.build.instance")
+	id("com.sandpolis.build.publish")
 }
 
 application {
@@ -58,7 +58,7 @@ dependencies {
 
 	// https://github.com/nayuki/QR-Code-generator
 	implementation("io.nayuki:qrcodegen:1.6.0")
-	
+
 	implementation("no.tornado:tornadofx:2.0.0-SNAPSHOT")
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.0")
 

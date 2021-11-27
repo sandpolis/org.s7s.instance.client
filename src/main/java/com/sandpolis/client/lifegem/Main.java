@@ -14,14 +14,12 @@ import com.sandpolis.client.lifegem.init.LifegemLoadUserInterface;
 import com.sandpolis.core.instance.Entrypoint;
 import com.sandpolis.core.instance.Metatypes.InstanceFlavor;
 import com.sandpolis.core.instance.Metatypes.InstanceType;
-import com.sandpolis.core.instance.init.InstanceLoadEnvironment;
 import com.sandpolis.core.instance.init.InstanceLoadPlugins;
 
 public final class Main extends Entrypoint {
 	private Main(String[] args) {
 		super(Main.class, InstanceType.CLIENT, InstanceFlavor.CLIENT_LIFEGEM);
 
-		register(new InstanceLoadEnvironment());
 		register(new LifegemLoadStores());
 		register(new InstanceLoadPlugins());
 		register(new LifegemLoadUserInterface());
