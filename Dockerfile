@@ -1,4 +1,4 @@
-FROM adoptopenjdk:17-hotspot
+FROM eclipse-temurin:17
 
 # Set application directory
 WORKDIR /app
@@ -13,7 +13,6 @@ RUN apt-get update && apt-get install -y libgtk-3-0 libglu1-mesa mesa-utils && a
 ENV S7S_RUNTIME_RESIDENCY     "container"
 ENV S7S_PATH_LIB              "/app/lib"
 ENV S7S_PATH_PLUGIN           "/app/plugin"
-ENV S7S_PLUGINS_ENABLED       "true"
 
 # Install application
 COPY build/lib /app/lib

@@ -13,6 +13,7 @@ import org.gradle.internal.os.OperatingSystem
 
 plugins {
 	id("java-library")
+	id("kotlin")
 	id("application")
 	id("com.sandpolis.build.module")
 	id("com.sandpolis.build.instance")
@@ -49,8 +50,8 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 dependencies {
-	testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.1")
-	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.1")
+	testImplementation("org.junit.jupiter:junit-jupiter-api:5.+")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.+")
 	testImplementation("org.testfx:testfx-core:4.0.16-alpha")
 	testImplementation("org.testfx:testfx-junit5:4.0.16-alpha")
 	testImplementation("org.testfx:openjfx-monocle:jdk-12.0.1+2")
