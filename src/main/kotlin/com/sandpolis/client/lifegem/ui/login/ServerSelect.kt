@@ -12,7 +12,7 @@ package com.sandpolis.client.lifegem.ui.login
 
 import com.sandpolis.client.lifegem.ui.main.MainView
 import com.sandpolis.core.client.cmd.ServerCmd
-import com.sandpolis.core.foundation.util.ValidationUtil
+import com.sandpolis.core.foundation.S7SString
 import com.sandpolis.core.instance.state.InstanceOids.ConnectionOid
 import com.sandpolis.core.net.connection.ConnectionStore
 import javafx.beans.property.SimpleObjectProperty
@@ -49,15 +49,15 @@ class ServerSelect(val parentView: LoginView) : Fragment() {
                                 if (text != null) {
                                     val index = text.lastIndexOf(":")
                                     if (index == -1) {
-                                        if (!ValidationUtil.address(text)) {
+                                        if (!S7SString.of(text).isIPv4()) {
                                             error("Invalid DNS name or IP address")
                                         } else {
                                             null
                                         }
                                     } else {
-                                        if (!ValidationUtil.address(text.substring(0, index))) {
+                                        if (!S7SString.of(text.substring(0, index)).isIPv4()) {
                                             error("Invalid DNS name or IP address")
-                                        } else if (!ValidationUtil.port(text.substring(index + 1))) {
+                                        } else if (!S7SString.of(text.substring(index + 1)).isPort()) {
                                             error("Invalid port")
                                         } else {
                                             null

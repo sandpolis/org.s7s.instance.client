@@ -68,7 +68,7 @@ class AgentManagerView : Fragment() {
                         imageview("image/platform/windows_10.png")
                         label("Windows")
                     }
-                    Platform.OsType.DARWIN -> hbox {
+                    Platform.OsType.MACOS -> hbox {
                         imageview("image/platform/osx.png")
                         label("macOS")
                     }

@@ -13,7 +13,7 @@ import org.gradle.internal.os.OperatingSystem
 
 plugins {
 	id("java-library")
-	id("kotlin")
+	kotlin("jvm") version "1.6.0"
 	id("application")
 	id("com.sandpolis.build.module")
 	id("com.sandpolis.build.instance")
