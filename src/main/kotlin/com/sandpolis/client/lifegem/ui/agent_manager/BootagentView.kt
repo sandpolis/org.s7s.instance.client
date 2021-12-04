@@ -14,8 +14,8 @@ import com.sandpolis.core.instance.state.st.STDocument
 import com.sandpolis.client.lifegem.plugin.AgentViewExtension
 import com.sandpolis.core.instance.state.InstanceOids.InstanceOids
 import com.sandpolis.core.instance.state.InstanceOids.ProfileOid
-import com.sandpolis.core.net.state.STCmd
-import com.sandpolis.core.net.state.st.entangled.EntangledDocument
+import com.sandpolis.core.instance.state.STCmd
+import com.sandpolis.core.instance.state.st.entangled.EntangledDocument
 import tornadofx.*
 import java.util.concurrent.CompletionStage
 

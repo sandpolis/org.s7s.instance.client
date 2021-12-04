@@ -14,10 +14,10 @@ import static com.sandpolis.core.instance.pref.PrefStore.PrefStore;
 import static com.sandpolis.core.instance.profile.ProfileStore.ProfileStore;
 import static com.sandpolis.core.instance.state.STStore.STStore;
 import static com.sandpolis.core.instance.thread.ThreadStore.ThreadStore;
-import static com.sandpolis.core.net.connection.ConnectionStore.ConnectionStore;
-import static com.sandpolis.core.net.exelet.ExeletStore.ExeletStore;
-import static com.sandpolis.core.net.network.NetworkStore.NetworkStore;
-import static com.sandpolis.core.net.stream.StreamStore.StreamStore;
+import static com.sandpolis.core.instance.connection.ConnectionStore.ConnectionStore;
+import static com.sandpolis.core.instance.exelet.ExeletStore.ExeletStore;
+import static com.sandpolis.core.instance.network.NetworkStore.NetworkStore;
+import static com.sandpolis.core.instance.stream.StreamStore.StreamStore;
 
 import java.util.List;
 import java.util.concurrent.Executors;

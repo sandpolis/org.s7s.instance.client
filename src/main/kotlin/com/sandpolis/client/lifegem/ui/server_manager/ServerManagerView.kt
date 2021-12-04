@@ -18,7 +18,7 @@ import com.sandpolis.core.instance.state.InstanceOids.ProfileOid.ServerOid.Liste
 import com.sandpolis.core.instance.state.STStore
 import com.sandpolis.core.instance.state.oid.Oid
 import com.sandpolis.core.instance.state.st.STDocument
-import com.sandpolis.core.net.state.STCmd
+import com.sandpolis.core.instance.state.STCmd
 import javafx.beans.binding.Bindings
 import javafx.beans.property.*
 import javafx.geometry.Pos

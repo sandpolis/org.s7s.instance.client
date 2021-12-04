@@ -25,7 +25,6 @@ open module com.sandpolis.client.lifegem {
 	requires com.google.protobuf;
 	requires com.sandpolis.core.foundation;
 	requires com.sandpolis.core.instance;
-	requires com.sandpolis.core.net;
 	requires com.sandpolis.core.client;
 	requires com.sandpolis.core.clientserver;
 	requires io.netty.common;

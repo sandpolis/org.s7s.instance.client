@@ -16,7 +16,7 @@ import com.sandpolis.core.client.cmd.LoginCmd
 import com.sandpolis.core.client.cmd.ServerCmd
 import com.sandpolis.core.instance.plugin.PluginStore
 import com.sandpolis.core.instance.state.oid.Oid
-import com.sandpolis.core.net.state.STCmd
+import com.sandpolis.core.instance.state.STCmd
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.animation.Timeline

@@ -13,7 +13,7 @@ package com.sandpolis.client.lifegem.ui.login
 import com.sandpolis.client.lifegem.ui.common.pane.CarouselPane
 import com.sandpolis.client.lifegem.ui.main.MainView
 import com.sandpolis.core.instance.state.st.STDocument
-import com.sandpolis.core.net.connection.Connection
+import com.sandpolis.core.instance.connection.Connection
 import javafx.beans.property.*
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList

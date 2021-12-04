@@ -14,7 +14,7 @@ import com.sandpolis.client.lifegem.ui.main.MainView
 import com.sandpolis.core.client.cmd.ServerCmd
 import com.sandpolis.core.foundation.S7SString
 import com.sandpolis.core.instance.state.InstanceOids.ConnectionOid
-import com.sandpolis.core.net.connection.ConnectionStore
+import com.sandpolis.core.instance.connection.ConnectionStore
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Orientation

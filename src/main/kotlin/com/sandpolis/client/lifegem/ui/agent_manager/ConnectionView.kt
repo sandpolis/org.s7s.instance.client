@@ -12,7 +12,7 @@ package com.sandpolis.client.lifegem.ui.agent_manager
 
 import com.sandpolis.client.lifegem.plugin.AgentViewExtension
 import com.sandpolis.core.instance.state.st.STDocument
-import com.sandpolis.core.net.state.st.entangled.EntangledDocument
+import com.sandpolis.core.instance.state.st.entangled.EntangledDocument
 import tornadofx.*
 import java.util.concurrent.CompletionStage
 
