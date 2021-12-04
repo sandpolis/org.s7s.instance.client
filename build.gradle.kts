@@ -67,8 +67,8 @@ dependencies {
 		implementation("com.sandpolis:core.client:+")
 		implementation("com.sandpolis:core.instance:+")
 	} else {
-		implementation(project(":module:com.sandpolis.core.client"))
-		implementation(project(":module:com.sandpolis.core.instance"))
+		implementation(project(":core:com.sandpolis.core.client"))
+		implementation(project(":core:com.sandpolis.core.instance"))
 	}
 
 	if (OperatingSystem.current().isMacOsX()) {
