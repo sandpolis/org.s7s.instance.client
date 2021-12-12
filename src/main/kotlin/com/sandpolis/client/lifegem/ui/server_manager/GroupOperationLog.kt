@@ -23,7 +23,7 @@ import tornadofx.*
 class GroupOperationLog(val extend: ObjectProperty<Region>, val group: STDocument) : Fragment() {
 
     override val root = titledpane("Operation Log", collapsible = false) {
-        content = tableview(FxUtil.newObservable(InstanceOids().group(group.oid().last()).operation)) {
+        /*content = tableview(FxUtil.newObservable(InstanceOids().group(group.oid().last()).operation)) {
             column<STDocument, String>("Start Time") {
                 FxUtil.newProperty(it.value.attribute(OperationOid.START_TIME))
             }
@@ -32,6 +32,6 @@ class GroupOperationLog(val extend: ObjectProperty<Region>, val group: STDocumen
                     progressProperty().bind(FxUtil.newProperty(it.value.attribute(OperationOid.PROGRESS)))
                 })
             }
-        }
+        }*/
     }
 }

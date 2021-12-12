@@ -29,7 +29,7 @@ class BootagentView : AgentViewExtension("Boot Agent") {
     }
 
     override fun nowVisible(profile: STDocument) {
-        entangled = STCmd.async().sync(InstanceOids().profile(profile.attribute(ProfileOid.UUID).asString()).bootagent.gptpartition)
+        //entangled = STCmd.async().sync(InstanceOids().profile(profile.attribute(ProfileOid.UUID).asString()).bootagent.gptpartition)
     }
 
     override fun nowInvisible() {

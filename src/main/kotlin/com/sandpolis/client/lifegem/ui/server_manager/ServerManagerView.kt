@@ -64,7 +64,7 @@ class ServerManagerView : View("Server Manager") {
                 }
             }
         }
-        content = tableview(FxUtil.newObservable(InstanceOids().group)) {
+        /*content = tableview(FxUtil.newObservable(InstanceOids().group)) {
 
             columnResizePolicy = TableView.CONSTRAINED_RESIZE_POLICY
 
@@ -76,7 +76,7 @@ class ServerManagerView : View("Server Manager") {
             selectionModel.selectedItemProperty().addListener { _, _, n ->
                 model.groupDialogProperty.set(GroupOperationLog(model.groupDialogProperty, n).root)
             }
-        }
+        }*/
     }
 
     override val root = drawer(multiselect = false) {
@@ -85,14 +85,14 @@ class ServerManagerView : View("Server Manager") {
 
         item("Servers") {
             expanded = true
-            tableview(FxUtil.newObservable(InstanceOids().profile.server)) {
+            /*tableview(FxUtil.newObservable(InstanceOids().profile.server)) {
 
                 columnResizePolicy = TableView.CONSTRAINED_RESIZE_POLICY
 
                 column<STDocument, String>("UUID") {
                     FxUtil.newProperty(it.value.attribute(ProfileOid.UUID))
                 }
-            }
+            }*/
         }
         item("Listeners") {
             borderpane {
@@ -101,7 +101,7 @@ class ServerManagerView : View("Server Manager") {
 
                     }
                 }
-                center = tableview(FxUtil.newObservable(InstanceOids().profile.server.listener)) {
+                /*center = tableview(FxUtil.newObservable(InstanceOids().profile.server.listener)) {
 
                     columnResizePolicy = TableView.CONSTRAINED_RESIZE_POLICY
 
@@ -111,7 +111,7 @@ class ServerManagerView : View("Server Manager") {
                     column<STDocument, String>("Listen Port") {
                         FxUtil.newProperty(it.value.attribute(ListenerOid.PORT))
                     }
-                }
+                }*/
             }
         }
         item("Users") {
@@ -121,7 +121,7 @@ class ServerManagerView : View("Server Manager") {
 
                     }
                 }
-                center = tableview(FxUtil.newObservable(InstanceOids().user)) {
+                /*center = tableview(FxUtil.newObservable(InstanceOids().user)) {
 
                     columnResizePolicy = TableView.CONSTRAINED_RESIZE_POLICY
 
@@ -137,7 +137,7 @@ class ServerManagerView : View("Server Manager") {
                     column<STDocument, String>("Login address") {
                         ReadOnlyObjectWrapper("")
                     }
-                }
+                }*/
             }
         }
         item("Agent Groups") {
@@ -150,8 +150,8 @@ class ServerManagerView : View("Server Manager") {
     }
 
     override fun onDock() {
-        STCmd.async().sync(InstanceOids().user)
-        STCmd.async().sync(InstanceOids().group)
+        //STCmd.async().sync(InstanceOids().user)
+        //STCmd.async().sync(InstanceOids().group)
     }
 
     override fun onUndock() {

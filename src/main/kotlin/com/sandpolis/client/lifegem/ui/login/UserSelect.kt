@@ -30,6 +30,7 @@ import javafx.util.Duration
 import tornadofx.*
 import java.util.*
 import kotlin.concurrent.timer
+import com.sandpolis.core.clientserver.Messages.RS_Login;
 
 class UserSelect(val parentView: LoginView) : Fragment() {
 
@@ -102,7 +103,7 @@ class UserSelect(val parentView: LoginView) : Fragment() {
                                     .login(model.username.get(), model.password.get())
                                     .toCompletableFuture().join()
                             } ui {
-                                if (it.result) {
+                                if (it == RS_Login.LOGIN_OK) {
                                     model.status.set("Loading plugins")
                                     runAsync {
                                         STCmd.async().target(parentView.model.connection).snapshot(Oid.of("/profile/*/plugin", parentView.model.connection.get(ConnectionOid.REMOTE_UUID).asString())).toCompletableFuture().join()

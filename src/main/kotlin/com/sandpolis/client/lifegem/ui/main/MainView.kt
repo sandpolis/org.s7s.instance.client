@@ -21,6 +21,7 @@ import com.sandpolis.core.instance.state.InstanceOids.ProfileOid.AgentOid
 import com.sandpolis.core.instance.state.InstanceOids.InstanceOids
 import com.sandpolis.core.instance.state.InstanceOids.ProfileOid
 import com.sandpolis.core.instance.state.st.STDocument
+import com.sandpolis.core.instance.state.oid.Oid
 import com.sandpolis.core.instance.state.STCmd
 import javafx.geometry.Side
 import javafx.scene.control.TableView
@@ -29,7 +30,7 @@ import tornadofx.*
 
 class MainView : View("Main") {
 
-    val profiles = FxUtil.newObservable(InstanceOids().profile) /*{
+    val profiles = FxUtil.newObservable(Oid.of("/profile")) /*{
         val attr = it.attribute(ProfileOid.INSTANCE_TYPE)
         attr.isPresent() && attr.asInstanceType() == Metatypes.InstanceType.AGENT;
     }*/
@@ -136,7 +137,7 @@ class MainView : View("Main") {
     }
 
     override fun onDock() {
-        STCmd.async().sync(InstanceOids().profile)
+        //STCmd.async().sync(InstanceOids().profile)
     }
 
     override fun onUndock() {
