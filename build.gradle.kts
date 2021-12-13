@@ -84,10 +84,10 @@ dependencies {
 		implementation("org.openjfx:javafx-fxml:17:linux")
 		implementation("org.openjfx:javafx-web:17:linux")
 	} else if (OperatingSystem.current().isWindows()) {
-		implementation("org.openjfx:javafx-base:17:windows")
-		implementation("org.openjfx:javafx-graphics:17:windows")
-		implementation("org.openjfx:javafx-controls:17:windows")
-		implementation("org.openjfx:javafx-fxml:17:windows")
-		implementation("org.openjfx:javafx-web:17:windows")
+		implementation("org.openjfx:javafx-base:17:win")
+		implementation("org.openjfx:javafx-graphics:17:win")
+		implementation("org.openjfx:javafx-controls:17:win")
+		implementation("org.openjfx:javafx-fxml:17:win")
+		implementation("org.openjfx:javafx-web:17:win")
 	}
 }
