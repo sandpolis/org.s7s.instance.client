@@ -60,7 +60,7 @@ dependencies {
 	// https://github.com/nayuki/QR-Code-generator
 	implementation("io.nayuki:qrcodegen:1.6.0")
 
-	implementation("no.tornado:tornadofx:2.0.0-SNAPSHOT")
+	api("no.tornado:tornadofx:2.0.0-SNAPSHOT")
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.0")
 
 	if (project.getParent() == null) {
@@ -72,22 +72,22 @@ dependencies {
 	}
 
 	if (OperatingSystem.current().isMacOsX()) {
-		implementation("org.openjfx:javafx-base:17:mac")
-		implementation("org.openjfx:javafx-graphics:17:mac")
-		implementation("org.openjfx:javafx-controls:17:mac")
-		implementation("org.openjfx:javafx-fxml:17:mac")
-		implementation("org.openjfx:javafx-web:17:mac")
+		api("org.openjfx:javafx-base:17:mac")
+		api("org.openjfx:javafx-graphics:17:mac")
+		api("org.openjfx:javafx-controls:17:mac")
+		api("org.openjfx:javafx-fxml:17:mac")
+		api("org.openjfx:javafx-web:17:mac")
 	} else if (OperatingSystem.current().isLinux()) {
-		implementation("org.openjfx:javafx-base:17:linux")
-		implementation("org.openjfx:javafx-graphics:17:linux")
-		implementation("org.openjfx:javafx-controls:17:linux")
-		implementation("org.openjfx:javafx-fxml:17:linux")
-		implementation("org.openjfx:javafx-web:17:linux")
+		api("org.openjfx:javafx-base:17:linux")
+		api("org.openjfx:javafx-graphics:17:linux")
+		api("org.openjfx:javafx-controls:17:linux")
+		api("org.openjfx:javafx-fxml:17:linux")
+		api("org.openjfx:javafx-web:17:linux")
 	} else if (OperatingSystem.current().isWindows()) {
-		implementation("org.openjfx:javafx-base:17:win")
-		implementation("org.openjfx:javafx-graphics:17:win")
-		implementation("org.openjfx:javafx-controls:17:win")
-		implementation("org.openjfx:javafx-fxml:17:win")
-		implementation("org.openjfx:javafx-web:17:win")
+		api("org.openjfx:javafx-base:17:win")
+		api("org.openjfx:javafx-graphics:17:win")
+		api("org.openjfx:javafx-controls:17:win")
+		api("org.openjfx:javafx-fxml:17:win")
+		api("org.openjfx:javafx-web:17:win")
 	}
 }
