@@ -12,7 +12,7 @@ import org.gradle.internal.os.OperatingSystem
 
 plugins {
 	id("java-library")
-	kotlin("jvm") version "1.6.0"
+	kotlin("jvm") version "1.6.10"
 	id("application")
 	id("org.s7s.build.module")
 	id("org.s7s.build.instance")
