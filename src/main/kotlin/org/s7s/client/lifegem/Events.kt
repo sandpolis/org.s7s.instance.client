@@ -6,16 +6,14 @@
 //  version 2. You may not use this file except in compliance with the MPLv2. //
 //                                                                            //
 //============================================================================//
+package org.s7s.instance.client.desktop.ui
 
-rootProject.name = "org.s7s.instance.client.desktop"
+import javafx.scene.control.TitledPane
+import tornadofx.*
 
-buildscript {
-	repositories {
-		maven {
-			url = uri("https://plugins.gradle.org/m2/")
-		}
-	}
-	dependencies {
-		classpath("org.s7s:org.s7s.build:+")
-	}
+object Events {
+
+    class MainViewChangeEvent(val view: String) : FXEvent()
+
+    class MainMenuOpenEvent(val view: TitledPane) : FXEvent()
 }

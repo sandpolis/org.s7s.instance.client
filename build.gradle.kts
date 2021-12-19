@@ -1,10 +1,9 @@
 //============================================================================//
 //                                                                            //
-//                         Copyright © 2015 Sandpolis                         //
+//            Copyright © 2015 - 2022 Sandpolis Software Foundation           //
 //                                                                            //
 //  This source file is subject to the terms of the Mozilla Public License    //
-//  version 2. You may not use this file except in compliance with the MPL    //
-//  as published by the Mozilla Foundation.                                   //
+//  version 2. You may not use this file except in compliance with the MPLv2. //
 //                                                                            //
 //============================================================================//
 
@@ -15,19 +14,19 @@ plugins {
 	id("java-library")
 	kotlin("jvm") version "1.6.0"
 	id("application")
-	id("com.sandpolis.build.module")
-	id("com.sandpolis.build.instance")
-	id("com.sandpolis.build.publish")
+	id("org.s7s.build.module")
+	id("org.s7s.build.instance")
+	id("org.s7s.build.publish")
 }
 
 application {
-	mainModule.set("com.sandpolis.client.lifegem")
-	mainClass.set("com.sandpolis.client.lifegem.Main")
+	mainModule.set("org.s7s.instance.client.desktop")
+	mainClass.set("org.s7s.instance.client.desktop.Main")
 }
 
 tasks.named<JavaExec>("run") {
 	environment.put("S7S_DEVELOPMENT_MODE", "true")
-	environment.put("S7S_LOG_LEVELS", "io.netty=WARN,java.util.prefs=OFF,com.sandpolis=TRACE")
+	environment.put("S7S_LOG_LEVELS", "io.netty=WARN,java.util.prefs=OFF,org.s7s=TRACE")
 	jvmArgs = listOf("--add-opens", "javafx.graphics/javafx.scene=tornadofx")
 }
 
@@ -64,11 +63,11 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.0")
 
 	if (project.getParent() == null) {
-		implementation("com.sandpolis:core.client:+")
-		implementation("com.sandpolis:core.instance:+")
+		implementation("org.s7s:core.client:+")
+		implementation("org.s7s:core.instance:+")
 	} else {
-		implementation(project(":core:com.sandpolis.core.client"))
-		implementation(project(":core:com.sandpolis.core.instance"))
+		implementation(project(":core:org.s7s.core.client"))
+		implementation(project(":core:org.s7s.core.instance"))
 	}
 
 	if (OperatingSystem.current().isMacOsX()) {

@@ -6,16 +6,10 @@
 //  version 2. You may not use this file except in compliance with the MPLv2. //
 //                                                                            //
 //============================================================================//
+package org.s7s.instance.client.desktop.plugin;
 
-rootProject.name = "org.s7s.instance.client.desktop"
+public interface AgentViewProvider {
 
-buildscript {
-	repositories {
-		maven {
-			url = uri("https://plugins.gradle.org/m2/")
-		}
-	}
-	dependencies {
-		classpath("org.s7s:org.s7s.build:+")
-	}
+	public AgentViewExtension[] getAgentViews();
+
 }

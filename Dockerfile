@@ -4,7 +4,7 @@ FROM eclipse-temurin:17
 WORKDIR /app
 
 # Set application entry
-ENTRYPOINT ["java", "-cp", "/app/lib/*", "com.sandpolis.client.lifegem.Main"]
+ENTRYPOINT ["java", "-cp", "/app/lib/*", "org.s7s.instance.client.desktop.Main"]
 
 # Install dependencies
 RUN apt-get update && apt-get install -y libgtk-3-0 libglu1-mesa mesa-utils && apt-get clean && rm -rf /var/lib/apt/lists/*

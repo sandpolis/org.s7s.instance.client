@@ -6,16 +6,27 @@
 //  version 2. You may not use this file except in compliance with the MPLv2. //
 //                                                                            //
 //============================================================================//
+package org.s7s.instance.client.desktop.ui.common
 
-rootProject.name = "org.s7s.instance.client.desktop"
+import org.s7s.core.instance.state.st.STDocument
+import javafx.scene.control.TreeItem
+import tornadofx.*
 
-buildscript {
-	repositories {
-		maven {
-			url = uri("https://plugins.gradle.org/m2/")
-		}
-	}
-	dependencies {
-		classpath("org.s7s:org.s7s.build:+")
-	}
+class STView(val document: STDocument) : Fragment() {
+
+    override val root = treeview<STDocument> {
+        root = TreeItem(document)
+
+        cellFormat {
+            text = it.oid().last()
+        }
+
+        populate { parent ->
+            if (parent.value.documentCount() == 0) {
+                null
+            } else {
+                FxUtil.newObservable(parent.value.oid())
+            }
+        }
+    }
 }

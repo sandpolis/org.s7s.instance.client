@@ -6,16 +6,19 @@
 //  version 2. You may not use this file except in compliance with the MPLv2. //
 //                                                                            //
 //============================================================================//
+package org.s7s.instance.client.desktop.ui.agent_manager
 
-rootProject.name = "org.s7s.instance.client.desktop"
+import org.s7s.core.instance.state.st.STDocument
+import tornadofx.Fragment
+import tornadofx.button
+import tornadofx.titledpane
 
-buildscript {
-	repositories {
-		maven {
-			url = uri("https://plugins.gradle.org/m2/")
-		}
-	}
-	dependencies {
-		classpath("org.s7s:org.s7s.build:+")
-	}
+class PowerControlPrompt : Fragment() {
+
+    val profile: STDocument by param()
+
+    override val root = titledpane("Run power operation") {
+        collapsibleProperty().set(false)
+        button("Power off")
+    }
 }

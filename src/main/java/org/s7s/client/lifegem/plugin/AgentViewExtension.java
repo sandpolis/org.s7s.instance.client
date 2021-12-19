@@ -6,16 +6,25 @@
 //  version 2. You may not use this file except in compliance with the MPLv2. //
 //                                                                            //
 //============================================================================//
+package org.s7s.instance.client.desktop.plugin;
 
-rootProject.name = "org.s7s.instance.client.desktop"
+import org.s7s.core.instance.state.st.STDocument;
 
-buildscript {
-	repositories {
-		maven {
-			url = uri("https://plugins.gradle.org/m2/")
-		}
+import tornadofx.View;
+
+public abstract class AgentViewExtension extends View {
+
+	private String name;
+
+	public AgentViewExtension(String name) {
+		this.name = name;
 	}
-	dependencies {
-		classpath("org.s7s:org.s7s.build:+")
+
+	public String getName() {
+		return name;
 	}
+
+	public abstract void nowVisible(STDocument profile);
+
+	public abstract void nowInvisible();
 }
