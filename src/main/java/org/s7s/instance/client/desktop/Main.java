@@ -17,7 +17,7 @@ import org.s7s.core.instance.init.InstanceLoadPlugins;
 
 public final class Main extends Entrypoint {
 	private Main(String[] args) {
-		super(Main.class, InstanceType.CLIENT, InstanceFlavor.CLIENT_LIFEGEM);
+		super(Main.class, InstanceType.CLIENT, InstanceFlavor.CLIENT_DESKTOP);
 
 		register(new LifegemLoadStores());
 		register(new InstanceLoadPlugins());
