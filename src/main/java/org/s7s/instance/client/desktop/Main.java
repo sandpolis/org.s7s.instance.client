@@ -11,8 +11,8 @@ package org.s7s.instance.client.desktop;
 import org.s7s.instance.client.desktop.init.LifegemLoadStores;
 import org.s7s.instance.client.desktop.init.LifegemLoadUserInterface;
 import org.s7s.core.instance.Entrypoint;
-import org.s7s.core.instance.Metatypes.InstanceFlavor;
-import org.s7s.core.instance.Metatypes.InstanceType;
+import org.s7s.core.foundation.Instance.InstanceFlavor;
+import org.s7s.core.foundation.Instance.InstanceType;
 import org.s7s.core.instance.init.InstanceLoadPlugins;
 
 public final class Main extends Entrypoint {

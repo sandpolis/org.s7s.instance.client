@@ -28,7 +28,7 @@ import javafx.util.Duration
 import tornadofx.*
 import java.util.*
 import kotlin.concurrent.timer
-import org.s7s.core.clientserver.Messages.RS_Login;
+import org.s7s.core.protocol.Session.RS_Login;
 
 class UserSelect(val parentView: LoginView) : Fragment() {
 

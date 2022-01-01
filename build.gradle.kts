@@ -17,6 +17,7 @@ plugins {
 	id("org.s7s.build.module")
 	id("org.s7s.build.instance")
 	id("org.s7s.build.publish")
+	id("com.github.johnrengelman.shadow") version "7.1.0"
 }
 
 application {
@@ -64,10 +65,8 @@ dependencies {
 
 	if (project.getParent() == null) {
 		implementation("org.s7s:core.client:+")
-		implementation("org.s7s:core.instance:+")
 	} else {
 		implementation(project(":core:org.s7s.core.client"))
-		implementation(project(":core:org.s7s.core.instance"))
 	}
 
 	if (OperatingSystem.current().isMacOsX()) {
