@@ -7,7 +7,13 @@
 //                                                                            //
 //============================================================================//
 
-rootProject.name = "org.s7s.instance.client.desktop"
+rootProject.name = "org.s7s.instance.client"
+
+include("android")
+include("common")
+include("desktop")
+include("ios")
+include("web")
 
 buildscript {
 	repositories {
