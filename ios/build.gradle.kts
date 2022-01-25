@@ -14,7 +14,7 @@ import org.openbakery.xcode.Destination
 plugins {
 	id("org.s7s.build.module")
 	id("org.s7s.build.instance")
-	id("org.openbakery.xcode-plugin") version "0.20.1"
+	id("org.openbakery.xcode-plugin") version "0.21.0"
 }
 
 xcodebuild {
